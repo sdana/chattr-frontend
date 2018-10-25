@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
-import {Route} from "react-router-dom"
-// import api from "./Components/Api/Api"
+import {Redirect} from "react-router-dom"
+import api from "../Api/Api"
 import TextField from "@material-ui/core/TextField"
 import Button from "@material-ui/core/Button"
 
 class Login extends Component {
 
-    state = {}
+    state = {
+        authenticated: false,
+        username: "",
+        password: ""
+    }
 
     // Update state whenever an input field is edited
     handleFieldChange = evt => {
@@ -18,10 +22,18 @@ class Login extends Component {
     handleLogin = (e) => {
         e.preventDefault()
         console.log("Working")
+        api.userLogIn(this.state.username, this.state.password).then(token => sessionStorage.setItem("loginToken", token))
+        .then(n => this.setState({authenticated: true}))
+        
     }
 
     render(){
+        if (this.state.authenticated){
+            return <Redirect to="/" />
+        }
+        else
         return(
+            
             <React.Fragment>
                 <form onSubmit={(e) => this.handleLogin(e)}>
                 <TextField
