@@ -49,7 +49,9 @@ class MenuAppBar extends React.Component {
   };
 
   componentDidMount = () => {
-    api.userDetails(sessionStorage.getItem("loginToken")).then(res => this.setState({user: res}))
+    const userToken = sessionStorage.getItem("loginToken")
+    api.userDetails(userToken).then(res => this.setState({user: res}))
+    api.getAllChatrooms(userToken).then(res => this.setState({chatrooms: res}))
   }
 
   toggleDrawer = (open) => {
@@ -82,10 +84,10 @@ class MenuAppBar extends React.Component {
     const sideList = (
       <div className={classes.list}>
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          {this.state.chatrooms.map((text, index) => (
             <div>
             <ListItem button key={text} onClick={() => this.toggleDrawer(false)}>
-              <ListItemText primary={text} />
+              <ListItemText primary={text.title} />
             <IconButton><Add /></IconButton>
             </ListItem>
             </div>

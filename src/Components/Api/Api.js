@@ -39,6 +39,16 @@ class Api {
         }).then(res => res.json())
     }
 
+    getAllChatrooms = (token) => {
+        return fetch("http://localhost:5555/api/chatroom",{
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: "application/json"
+            }
+        }).then(res => res.json())
+    }
+
 }
 
 const api = new Api()
