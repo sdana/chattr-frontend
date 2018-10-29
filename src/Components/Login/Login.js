@@ -8,6 +8,7 @@ class Login extends Component {
 
     state = {
         authenticated: false,
+        register: false,
         username: "",
         password: ""
     }
@@ -27,13 +28,22 @@ class Login extends Component {
         
     }
 
+    registerNewAccount = (e) => {
+        e.preventDefault()
+        this.setState({register: true})
+    }
+
     render(){
         if (this.state.authenticated){
             return <Redirect to="/" />
         }
+        else if (this.state.register) {
+                return (
+                    <Redirect to="/register" />
+                )
+        }
         else
         return(
-            
             <React.Fragment>
                 <form onSubmit={(e) => this.handleLogin(e)}>
                 <TextField
@@ -56,6 +66,7 @@ class Login extends Component {
                     onChange={this.handleFieldChange}
                 />
                 <Button variant="contained" color="primary" id="loginButton" type="submit">Login</Button>
+                <Button variant="contained" color="secondary" id="registerButton" onClick={this.registerNewAccount}>New User?</Button>
                 </form>
         </React.Fragment>
         )
