@@ -5,6 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import Add from "@material-ui/icons/Add"
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -32,6 +33,9 @@ const styles = {
   fullList: {
     width: 'auto',
   },
+  plusIcon: {
+    display: 'inline'
+  }
 };
 
 class MenuAppBar extends React.Component {
@@ -40,7 +44,8 @@ class MenuAppBar extends React.Component {
     anchorEl: null,
     user: {},
     logout: false,
-    showDrawer: false
+    showDrawer: false,
+    chatrooms: []
   };
 
   componentDidMount = () => {
@@ -78,9 +83,12 @@ class MenuAppBar extends React.Component {
       <div className={classes.list}>
         <List>
           {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
+            <div>
+            <ListItem button key={text} onClick={() => this.toggleDrawer(false)}>
               <ListItemText primary={text} />
+            <IconButton><Add /></IconButton>
             </ListItem>
+            </div>
           ))}
         </List>
       </div>
