@@ -2,7 +2,7 @@ class Api {
 
     //User login method. Also receives bearer token to interact with restricted parts of API
     userLogIn = (username, password) => {
-       return fetch("http://localhost:5000/api/token",{
+       return fetch("http://localhost:5555/api/token",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -15,7 +15,7 @@ class Api {
     }
 
     userDetails = (token) => {
-        return fetch("http://localhost:5000/api/user", {
+        return fetch("http://localhost:5555/api/user", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${sessionStorage.getItem("loginToken")}`,

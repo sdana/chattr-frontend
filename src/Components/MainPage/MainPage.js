@@ -4,20 +4,23 @@ import api from "../Api/Api"
 export default class MainPage extends Component {
 
     state = {
-        user: {
-            username: ""
-        }
+        user: {}
     }
 
+    componentDidMount() {
+        this.getUserDetails()
+    }
+    
     getUserDetails = () => {
-        api.userDetails(sessionStorage.getItem("loginToken")).then(res => console.log(res))
+        api.userDetails(sessionStorage.getItem("loginToken")).then(user => this.setState({user: user}))
     }
 
     render(){
-        this.getUserDetails()
 
         return (
-            <h1>HEllo world</h1>
+            <React.Fragment>
+                <h1>Welcome to Chattr {this.state.user.email}</h1>
+            </React.Fragment>
         )
     }
 }
