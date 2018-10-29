@@ -10,6 +10,10 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import api from "../Api/Api"
+import Drawer from '@material-ui/core/Drawer';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItem from '@material-ui/core/ListItem';
+import List from '@material-ui/core/List';
 
 const styles = {
   root: {
@@ -22,6 +26,12 @@ const styles = {
     marginLeft: -12,
     marginRight: 20,
   },
+  list: {
+    width: 250,
+  },
+  fullList: {
+    width: 'auto',
+  },
 };
 
 class MenuAppBar extends React.Component {
@@ -29,12 +39,19 @@ class MenuAppBar extends React.Component {
     auth: true,
     anchorEl: null,
     user: {},
-    logout: false
+    logout: false,
+    showDrawer: false
   };
 
   componentDidMount = () => {
     api.userDetails(sessionStorage.getItem("loginToken")).then(res => this.setState({user: res}))
   }
+
+  toggleDrawer = (open) => {
+    this.setState({
+      showDrawer: open,
+    });
+  };
 
   logout = () => {
     sessionStorage.removeItem("loginToken")
@@ -57,6 +74,17 @@ class MenuAppBar extends React.Component {
     const { classes } = this.props;
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
+    const sideList = (
+      <div className={classes.list}>
+        <List>
+          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+            <ListItem button key={text}>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+      </div>
+    )
 
     return (
       (this.state.logout) 
@@ -66,9 +94,19 @@ class MenuAppBar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+            <IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={() => this.toggleDrawer(true)}>
               <MenuIcon />
             </IconButton>
+            <Drawer open={this.state.showDrawer} onClose={() => this.toggleDrawer(false)}>
+          <div
+            tabIndex={0}
+            role="button"
+            onClick={() => this.toggleDrawer(false)}
+            onKeyDown={() => this.toggleDrawer(false)}
+          >
+          </div>
+          {sideList}
+        </Drawer>
             <Typography variant="h6" color="inherit" className={classes.grow}>
               Welcome to Chattr {(this.state.user) ? `${this.state.user.firstName} ${this.state.user.lastName}` : ""}
             </Typography>
