@@ -5,16 +5,12 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import Add from "@material-ui/icons/Add"
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import api from "../Api/Api"
 import Drawer from '@material-ui/core/Drawer';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItem from '@material-ui/core/ListItem';
-import List from '@material-ui/core/List';
 import Chatroom from "../Chatroom/Chatroom"
 import { HubConnectionBuilder, LogLevel } from "@aspnet/signalr"
 import PopulateChatroomList from "../Chatroom/PopulateChatroomList"
@@ -51,7 +47,9 @@ class MenuAppBar extends React.Component {
     user: {},
     logout: false,
     showDrawer: false,
-    chatrooms: []
+    chatrooms: [],
+    currentChatroom: "",
+    hubConnection: null 
   };
 
   componentDidMount = () => {
@@ -73,12 +71,10 @@ class MenuAppBar extends React.Component {
         });
   }
 
+  
+
   toggleDrawer = (open) => {
     api.getAllChatrooms(this.state.userToken).then(res => this.setState({chatrooms: res, showDrawer: open}))
-
-    // this.setState({
-    //   showDrawer: open,
-    // });
   };
 
   logout = () => {
@@ -98,12 +94,16 @@ class MenuAppBar extends React.Component {
     this.setState({ anchorEl: null });
   };
 
+  setCurrentChatroom = (room) => {
+    this.setState({currentChatroom: room})
+  }
+
   render() {
     const { classes } = this.props;
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
     const sideList = (
-      <PopulateChatroomList chatrooms={(this.state.chatrooms) ? this.state.chatrooms : []} />
+      <PopulateChatroomList setCurrentChatroom={this.setCurrentChatroom} hubConnection={this.state.hubConnection} chatrooms={this.state.chatrooms} toggleDrawer={this.toggleDrawer} />
     )
 
     return (
@@ -168,7 +168,8 @@ class MenuAppBar extends React.Component {
         </AppBar>
       </div>
       <div>
-        {/* <Chatroom /> */}
+        <Chatroom currentRoom={this.state.currentChatroom} hubConnection={this.state.hubConnection}/>
+        {console.log(this.state.hubConnection)}
       </div>
     </React.Fragment>
     );

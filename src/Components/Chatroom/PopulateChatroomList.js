@@ -5,6 +5,7 @@ import List from '@material-ui/core/List';
 import Add from "@material-ui/icons/Add"
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
+import signalR from "@aspnet/signalr"
 
 const classes = {
     list: {
@@ -16,11 +17,15 @@ const PopulateChatroomList = (props) => {
      return (   
         <div className={classes.list}>
             <List>
-                {props.chatrooms.map((text, index) => (
+                {props.chatrooms.map((room, index) => (
                 <div key={index}>
-                    <ListItem button key={text} onClick={() => this.toggleDrawer(false)}>
-                    <ListItemText primary={text.title} />
-                    <IconButton><Add /></IconButton>
+                    <ListItem button key={room.title} onClick={() => props.toggleDrawer(false)}>
+                    <ListItemText primary={room.title} />
+                    <IconButton id={room.title} onClick={(e) => {
+                        console.log(e.currentTarget)
+                        props.setCurrentChatroom(e.currentTarget.id)
+                        props.hubConnection.invoke("AddToGroup", e.currentTarget.id)
+                    }}><Add /></IconButton>
                     </ListItem>
                     </div>
           ))}
