@@ -52,7 +52,8 @@ class MainPage extends React.Component {
     showDrawer: false,
     chatrooms: [],
     currentChatroom: "",
-    messages: [] 
+    messages: [],
+    previousMessages: [] 
   };
 
   componentDidMount = () => {
@@ -75,6 +76,11 @@ class MainPage extends React.Component {
         
         hubConnection.on("downloadMessage", incomingMessage =>{
             this.receiveMessage(incomingMessage)
+        })
+
+        hubConnection.on("downloadPreviousMessages", chatroomName => {
+            const userToken = sessionStorage.getItem("loginToken")
+            api.getPreviousChatroomMessages(userToken, this.state.currentChatroom).then(res => this.setState({previousMessages: res}))
         })
       
   }
@@ -129,7 +135,7 @@ class MainPage extends React.Component {
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
     const sideList = (
-      <PopulateChatroomList user={this.state.user}setCurrentChatroom={this.setCurrentChatroom} hubConnection={this.state.hubConnection} chatrooms={this.state.chatrooms} toggleDrawer={this.toggleDrawer} />
+      <PopulateChatroomList user={this.state.user} setCurrentChatroom={this.setCurrentChatroom} hubConnection={this.state.hubConnection} chatrooms={this.state.chatrooms} toggleDrawer={this.toggleDrawer} />
     )
 
     return (
@@ -194,7 +200,7 @@ class MainPage extends React.Component {
         </AppBar>
       </div>
       <div>
-        <Chatroom currentRoom={this.state.currentChatroom} messages={this.state.messages} sendMessage={this.sendMessage} hubConnection={this.state.hubConnection} />
+        <Chatroom currentRoom={this.state.currentChatroom} previousMessages={this.state.previousMessages} messages={this.state.messages} sendMessage={this.sendMessage} hubConnection={this.state.hubConnection} />
       </div>
     </React.Fragment>
     );

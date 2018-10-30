@@ -49,6 +49,17 @@ class Api {
         }).then(res => res.json())
     }
 
+    getPreviousChatroomMessages = (token, chatroomName) => {
+        return fetch("http://localhost:5555/api/message", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: "application/json",
+                chatroomName: chatroomName
+            }
+        }).then(res => res.json())
+    }
+
     writeMessageToDb = (message, chatName, userId, token) => {
         return fetch("http://localhost:5555/api/message", {
             method: "POST",
