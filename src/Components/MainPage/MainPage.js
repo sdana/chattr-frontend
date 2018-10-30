@@ -15,6 +15,9 @@ import Chatroom from "../Chatroom/Chatroom"
 import { HubConnectionBuilder, LogLevel } from "@aspnet/signalr"
 import PopulateChatroomList from "../Chatroom/PopulateChatroomList"
 
+//use new materialUI typography variants
+window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
+
 const styles = {
   root: {
     flexGrow: 1,
@@ -40,7 +43,7 @@ const styles = {
   },
 };
 
-class MenuAppBar extends React.Component {
+class MainPage extends React.Component {
   state = {
     auth: true,
     anchorEl: null,
@@ -49,7 +52,7 @@ class MenuAppBar extends React.Component {
     showDrawer: false,
     chatrooms: [],
     currentChatroom: "",
-    hubConnection: null 
+    messages: [] 
   };
 
   componentDidMount = () => {
@@ -69,8 +72,31 @@ class MenuAppBar extends React.Component {
             .catch(err => console.log('Error while establishing connection :('));
         
         });
+        
+        hubConnection.on("downloadMessage", incomingMessage =>{
+            this.receiveMessage(incomingMessage)
+        })
+      
   }
 
+  receiveMessage = (incomingMessage) => {
+    let newMessage = this.state.messages
+            newMessage.push(incomingMessage)
+            this.setState({messages: newMessage})
+  }
+
+  sendMessage = (e, message) => {
+    e.preventDefault()
+    console.log("sending message", message)
+    if (this.state.hubConnection){
+      console.log("Sending message")
+      this.state.hubConnection.invoke("NewMessage", message, this.state.currentChatroom).catch(err => console.error(err.toString()))
+    //   this.setState({
+    //     switcher: !this.state.switcher
+    //   })
+    }
+  
+  }
   
 
   toggleDrawer = (open) => {
@@ -168,12 +194,11 @@ class MenuAppBar extends React.Component {
         </AppBar>
       </div>
       <div>
-        <Chatroom currentRoom={this.state.currentChatroom} hubConnection={this.state.hubConnection}/>
-        {console.log(this.state.hubConnection)}
+        <Chatroom currentRoom={this.state.currentChatroom} messages={this.state.messages} sendMessage={this.sendMessage} hubConnection={this.state.hubConnection} />
       </div>
     </React.Fragment>
     );
   }
 }
 
-export default withStyles(styles)(MenuAppBar);
+export default withStyles(styles)(MainPage);
