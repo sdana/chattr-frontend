@@ -17,6 +17,7 @@ import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
 import Chatroom from "../Chatroom/Chatroom"
 import { HubConnectionBuilder, LogLevel } from "@aspnet/signalr"
+import PopulateChatroomList from "../Chatroom/PopulateChatroomList"
 
 const styles = {
   root: {
@@ -56,7 +57,7 @@ class MenuAppBar extends React.Component {
   componentDidMount = () => {
     const userToken = sessionStorage.getItem("loginToken")
     api.userDetails(userToken).then(res => this.setState({user: res}))
-    api.getAllChatrooms(userToken).then(res => this.setState({chatrooms: res}))
+    api.getAllChatrooms(userToken).then(res => this.setState({chatrooms: res, userToken: userToken}))
 
     const hubConnection = new HubConnectionBuilder()
         .withUrl("http://localhost:5555/Hubs/ChatHub")
@@ -73,9 +74,11 @@ class MenuAppBar extends React.Component {
   }
 
   toggleDrawer = (open) => {
-    this.setState({
-      showDrawer: open,
-    });
+    api.getAllChatrooms(this.state.userToken).then(res => this.setState({chatrooms: res, showDrawer: open}))
+
+    // this.setState({
+    //   showDrawer: open,
+    // });
   };
 
   logout = () => {
@@ -100,18 +103,7 @@ class MenuAppBar extends React.Component {
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
     const sideList = (
-      <div className={classes.list}>
-        <List>
-          {this.state.chatrooms.map((text, index) => (
-            <div key={index}>
-            <ListItem button key={text} onClick={() => this.toggleDrawer(false)}>
-              <ListItemText primary={text.title} />
-            <IconButton><Add /></IconButton>
-            </ListItem>
-            </div>
-          ))}
-        </List>
-      </div>
+      <PopulateChatroomList chatrooms={(this.state.chatrooms) ? this.state.chatrooms : []} />
     )
 
     return (
