@@ -87,13 +87,13 @@ class MainPage extends React.Component {
 
   sendMessage = (e, message) => {
     e.preventDefault()
+    const userToken = sessionStorage.getItem("loginToken")
+    let user = `${this.state.user.firstName} ${this.state.user.lastName}`
     console.log("sending message", message)
     if (this.state.hubConnection){
       console.log("Sending message")
-      this.state.hubConnection.invoke("NewMessage", message, this.state.currentChatroom).catch(err => console.error(err.toString()))
-    //   this.setState({
-    //     switcher: !this.state.switcher
-    //   })
+      this.state.hubConnection.invoke("NewMessage", message, this.state.currentChatroom, user).catch(err => console.error(err.toString()))
+      api.writeMessageToDb(message, this.state.currentChatroom, this.state.user.id, userToken)
     }
   
   }
@@ -129,7 +129,7 @@ class MainPage extends React.Component {
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
     const sideList = (
-      <PopulateChatroomList setCurrentChatroom={this.setCurrentChatroom} hubConnection={this.state.hubConnection} chatrooms={this.state.chatrooms} toggleDrawer={this.toggleDrawer} />
+      <PopulateChatroomList user={this.state.user}setCurrentChatroom={this.setCurrentChatroom} hubConnection={this.state.hubConnection} chatrooms={this.state.chatrooms} toggleDrawer={this.toggleDrawer} />
     )
 
     return (

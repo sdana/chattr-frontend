@@ -49,6 +49,22 @@ class Api {
         }).then(res => res.json())
     }
 
+    writeMessageToDb = (message, chatName, userId, token) => {
+        return fetch("http://localhost:5555/api/message", {
+            method: "POST",
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': "application/json",
+                'Accept': "application/json"
+            },
+            body: JSON.stringify({
+                MessageText: message,
+                ChatroomName: chatName,
+                UserId: userId
+            })
+        }).then(e => e.json()).catch(err => console.log(err))
+    }
+
 }
 
 const api = new Api()

@@ -9,19 +9,6 @@ export default class Chatroom extends Component {
         messageField: "",
     }
 
-    // sendMessage = (e, message) => {
-    //     e.preventDefault()
-    //     if (this.props.hubConnection){
-    //       console.log("Sending message")
-    //       this.props.hubConnection.invoke("NewMessage", this.state.messageField, this.props.currentRoom).catch(err => console.error(err.toString()))
-    //     //   this.setState({
-    //     //     switcher: !this.state.switcher
-    //     //   })
-    //     }
-      
-    //   }
-
-
       handleFieldChange = evt => {
         const stateToChange = {}
         stateToChange[evt.target.id] = evt.target.value
