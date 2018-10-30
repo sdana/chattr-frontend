@@ -15,6 +15,8 @@ import Drawer from '@material-ui/core/Drawer';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
+import Chatroom from "../Chatroom/Chatroom"
+import { HubConnectionBuilder, LogLevel } from "@aspnet/signalr"
 
 const styles = {
   root: {
@@ -35,7 +37,10 @@ const styles = {
   },
   plusIcon: {
     display: 'inline'
-  }
+  },
+  typography: {
+    useNextVariants: true,
+  },
 };
 
 class MenuAppBar extends React.Component {
@@ -52,6 +57,19 @@ class MenuAppBar extends React.Component {
     const userToken = sessionStorage.getItem("loginToken")
     api.userDetails(userToken).then(res => this.setState({user: res}))
     api.getAllChatrooms(userToken).then(res => this.setState({chatrooms: res}))
+
+    const hubConnection = new HubConnectionBuilder()
+        .withUrl("http://localhost:5555/Hubs/ChatHub")
+        .configureLogging(LogLevel.Information)
+        .build();
+
+      this.setState({ hubConnection }, () => {
+            this.state.hubConnection
+            .start({withCredentials: false})
+            .then(() => console.log('Connection started!'))
+            .catch(err => console.log('Error while establishing connection :('));
+        
+        });
   }
 
   toggleDrawer = (open) => {
@@ -85,7 +103,7 @@ class MenuAppBar extends React.Component {
       <div className={classes.list}>
         <List>
           {this.state.chatrooms.map((text, index) => (
-            <div>
+            <div key={index}>
             <ListItem button key={text} onClick={() => this.toggleDrawer(false)}>
               <ListItemText primary={text.title} />
             <IconButton><Add /></IconButton>
@@ -101,6 +119,7 @@ class MenuAppBar extends React.Component {
       ? 
       <Redirect to="/" /> 
       :
+      <React.Fragment>
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
@@ -156,6 +175,10 @@ class MenuAppBar extends React.Component {
           </Toolbar>
         </AppBar>
       </div>
+      <div>
+        {/* <Chatroom /> */}
+      </div>
+    </React.Fragment>
     );
   }
 }
