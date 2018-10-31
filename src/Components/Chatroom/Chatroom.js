@@ -3,6 +3,7 @@ import './Chatroom.css';
 import api from "../Api/Api"
 import PreviousMessages from "./PreviousMessages"
 import Button from "@material-ui/core/Button"
+import TextField from "@material-ui/core/TextField"
 
 export default class Chatroom extends Component {
 
@@ -34,7 +35,19 @@ export default class Chatroom extends Component {
                     {this.props.messages.map((message,index) => {return <li key={index}>{message}</li>})}
                 </ul>
             </div>
-        <form onSubmit={(e) => {this.setState({messageField: ""}); this.props.sendMessage(e, this.state.messageField)}}><input id="messageField" autoComplete="off" type="text" placeholder="message" value={this.state.messageField} onInput={e => this.handleFieldChange(e)}></input><Button variant="text" color="primary" type="submit">Send</Button></form>
+        <form onSubmit={(e) => {
+            e.preventDefault() 
+            if(this.state.messageField === ""){
+                alert("Message can not be blank")
+                return
+            }
+            else {
+            this.props.sendMessage(e, this.state.messageField)
+            this.setState({messageField: ""})
+            }
+                }}>
+                <input id="messageField" autofocus autoComplete="off" type="text" placeholder="message" value={this.state.messageField} onInput={e => this.handleFieldChange(e)}></input>
+                <Button variant="text" color="primary" type="submit">Send</Button></form>
       </div>
 
         )

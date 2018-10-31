@@ -16,8 +16,9 @@
   }
   
   input {
-    width: 90vw;
+    width: 91%;
     height: 30px;
+    display: inline-block;
   }
   
   h1 {

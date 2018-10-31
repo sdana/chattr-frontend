@@ -41,6 +41,9 @@ const styles = {
   typography: {
     useNextVariants: true,
   },
+  headline: {
+    display: 'block'
+  }
 };
 
 class MainPage extends React.Component {
@@ -94,7 +97,7 @@ class MainPage extends React.Component {
 
   removeFromChatroom = () => {
     if (this.state.currentChatroom){
-      this.state.hubConnection.invoke("RemoveFromChat", this.state.currentChatroom)
+      this.state.hubConnection.invoke("RemoveFromChat", this.state.currentChatroom, `${this.state.user.firstName} ${this.state.user.lastName}`)
     }
   }
 
@@ -228,7 +231,7 @@ class MainPage extends React.Component {
         </AppBar>
       </div>
       <div>
-        {(this.state.currentChatroom) ? <Chatroom currentRoom={this.state.currentChatroom} messages={this.state.messages} sendMessage={this.sendMessage} previousMessages={this.state.previousMessages} /> : null}
+        {(this.state.currentChatroom) ? <Chatroom currentRoom={this.state.currentChatroom} messages={this.state.messages} sendMessage={this.sendMessage} previousMessages={this.state.previousMessages} /> : <div><h1 className="headline">Welcome to Chattr!</h1><h3>Please select a chat room</h3></div>}
       </div>
     </React.Fragment>
     );
