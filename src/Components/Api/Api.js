@@ -2,7 +2,7 @@ class Api {
 
     //User login method. Also receives bearer token to interact with restricted parts of API
     userLogIn = (username, password) => {
-       return fetch("http://localhost:5555/api/login",{
+       return fetch("http://10.0.0.205:5555/api/login",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -15,7 +15,7 @@ class Api {
     }
 
     userRegister = (username, password, firstName,lastName) => {
-        return fetch("http://localhost:5555/api/token",{
+        return fetch("http://10.0.0.205:5555/api/token",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -30,13 +30,49 @@ class Api {
     }
 
     userDetails = (token) => {
-        return fetch("http://localhost:5555/api/user", {
+        return fetch("http://10.0.0.205:5555/api/user", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${sessionStorage.getItem("loginToken")}`,
                 "Content-Type": "application/json"
             }
         }).then(res => res.json())
+    }
+
+    getAllChatrooms = (token) => {
+        return fetch("http://10.0.0.205:5555/api/chatroom",{
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: "application/json"
+            }
+        }).then(res => res.json())
+    }
+
+    getPreviousChatroomMessages = (token, chatroomName) => {
+        return fetch("http://10.0.0.205:5555/api/message", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                chatroomName: chatroomName
+            }
+        }).then(res => res.json())
+    }
+
+    writeMessageToDb = (message, chatName, userId, token) => {
+        return fetch("http://10.0.0.205:5555/api/message", {
+            method: "POST",
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': "application/json",
+                'Accept': "application/json"
+            },
+            body: JSON.stringify({
+                MessageText: message,
+                ChatroomName: chatName,
+                UserId: userId
+            })
+        }).then(e => e.json()).catch(err => console.log(err))
     }
 
 }

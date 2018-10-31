@@ -9,6 +9,10 @@ export default class ApplicationViews extends Component {
     isAuthenticated = () => {
         return sessionStorage.getItem("loginToken")
     }
+
+    showSideMenu = () => {
+        this.setState({sideMenu: true})
+    }
     
     render(){
         if (!this.isAuthenticated()){
@@ -21,7 +25,9 @@ export default class ApplicationViews extends Component {
         }
         else {
             return (
-                <Route exact path="/" component={MainPage} />
+                <React.Fragment>
+                    <Route exact path="/" component={MainPage} />
+                </React.Fragment>
             )
         }
 
