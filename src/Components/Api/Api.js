@@ -2,7 +2,7 @@ class Api {
 
     //User login method. Also receives bearer token to interact with restricted parts of API
     userLogIn = (username, password) => {
-       return fetch("http://localhost:5555/api/login",{
+       return fetch("http://10.0.0.205:5555/api/login",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -15,7 +15,7 @@ class Api {
     }
 
     userRegister = (username, password, firstName,lastName) => {
-        return fetch("http://localhost:5555/api/token",{
+        return fetch("http://10.0.0.205:5555/api/token",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -30,7 +30,7 @@ class Api {
     }
 
     userDetails = (token) => {
-        return fetch("http://localhost:5555/api/user", {
+        return fetch("http://10.0.0.205:5555/api/user", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${sessionStorage.getItem("loginToken")}`,
@@ -40,7 +40,7 @@ class Api {
     }
 
     getAllChatrooms = (token) => {
-        return fetch("http://localhost:5555/api/chatroom",{
+        return fetch("http://10.0.0.205:5555/api/chatroom",{
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -50,18 +50,17 @@ class Api {
     }
 
     getPreviousChatroomMessages = (token, chatroomName) => {
-        return fetch("http://localhost:5555/api/message", {
+        return fetch("http://10.0.0.205:5555/api/message", {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
-                Accept: "application/json",
                 chatroomName: chatroomName
             }
         }).then(res => res.json())
     }
 
     writeMessageToDb = (message, chatName, userId, token) => {
-        return fetch("http://localhost:5555/api/message", {
+        return fetch("http://10.0.0.205:5555/api/message", {
             method: "POST",
             headers: {
                 'Authorization': `Bearer ${token}`,

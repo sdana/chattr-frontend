@@ -1,20 +1,13 @@
-import React, { Component } from "react"
-
-
-const classes = {
-    list: {
-        width: 250,
-      }
-}
+import React from "react"
 
 const PopulateChatroomList = (props) => {
-     return (   
-        <div>
-           {for (let message in props.previousMessages){
-               <li>{message.messageText}</li>
-           }} 
-      </div>
-        )
-    }
 
-    export default PopulateChatroomList
+
+    return (
+        <React.Fragment>
+            {(props.messages) ? props.messages.map((message, index) => <li>{message.user.firstName} {message.user.lastName}: {message.messageText}</li>) : null}
+        </React.Fragment>
+    )
+}
+
+export default PopulateChatroomList

@@ -62,7 +62,7 @@ class MainPage extends React.Component {
     api.getAllChatrooms(userToken).then(res => this.setState({chatrooms: res, userToken: userToken}))
 
     const hubConnection = new HubConnectionBuilder()
-        .withUrl("http://localhost:5555/Hubs/ChatHub")
+        .withUrl("http://10.0.0.205:5555/Hubs/ChatHub")
         .configureLogging(LogLevel.Information)
         .build();
 
@@ -103,6 +103,10 @@ class MainPage extends React.Component {
     }
   
   }
+
+  clearMessagesOnRoomChange = () => {
+    this.setState({messages: []})
+  }
   
 
   toggleDrawer = (open) => {
@@ -135,7 +139,7 @@ class MainPage extends React.Component {
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
     const sideList = (
-      <PopulateChatroomList user={this.state.user} setCurrentChatroom={this.setCurrentChatroom} hubConnection={this.state.hubConnection} chatrooms={this.state.chatrooms} toggleDrawer={this.toggleDrawer} />
+      <PopulateChatroomList user={this.state.user} setCurrentChatroom={this.setCurrentChatroom} hubConnection={this.state.hubConnection} chatrooms={this.state.chatrooms} toggleDrawer={this.toggleDrawer} clearMessages={this.clearMessagesOnRoomChange}/>
     )
 
     return (
@@ -160,8 +164,11 @@ class MainPage extends React.Component {
           </div>
           {sideList}
         </Drawer>
+            <Typography variant="h4" color="inherit" className={classes.grow}>
+              Welcome to Chattr {(this.state.user) ? `${this.state.user.firstName} ${this.state.user.lastName}!` : ""}
+            </Typography>
             <Typography variant="h6" color="inherit" className={classes.grow}>
-              Welcome to Chattr {(this.state.user) ? `${this.state.user.firstName} ${this.state.user.lastName}` : ""}
+              {(this.state.currentChatroom) ? `Chatting in ${this.state.currentChatroom}` : ""}
             </Typography>
             {auth && (
               <div>
@@ -200,7 +207,7 @@ class MainPage extends React.Component {
         </AppBar>
       </div>
       <div>
-        <Chatroom currentRoom={this.state.currentChatroom} previousMessages={this.state.previousMessages} messages={this.state.messages} sendMessage={this.sendMessage} hubConnection={this.state.hubConnection} />
+        {(this.state.currentChatroom) ? <Chatroom currentRoom={this.state.currentChatroom} messages={this.state.messages} sendMessage={this.sendMessage} previousMessages={this.state.previousMessages} /> : null}
       </div>
     </React.Fragment>
     );

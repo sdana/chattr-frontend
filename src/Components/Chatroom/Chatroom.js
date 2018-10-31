@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './Chatroom.css';
+import api from "../Api/Api"
 import PreviousMessages from "./PreviousMessages"
 import Button from "@material-ui/core/Button"
 
@@ -16,13 +17,20 @@ export default class Chatroom extends Component {
         this.setState(stateToChange)
       }
 
+      componentDidMount = () => {
+        const userToken = sessionStorage.getItem("loginToken")
+        // api.getPreviousChatroomMessages(userToken, this.props.currentChatroom).then(res => this.setState({previousMessages: res}))
+      }
+
+
     render(){
 
         return(
             <div id="main">
                 <div id="message-box">
                 <ul>
-                {(this.props.previousMessages) ? <PreviousMessages messages={this.props.previousMessages} /> : null}
+                <PreviousMessages messages={this.props.previousMessages} />
+                    
                     {this.props.messages.map((message,index) => {return <li key={index}>{message}</li>})}
                 </ul>
             </div>

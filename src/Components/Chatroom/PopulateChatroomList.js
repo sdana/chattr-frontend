@@ -22,7 +22,7 @@ const PopulateChatroomList = (props) => {
                     <ListItem button key={room.title} onClick={() => props.toggleDrawer(false)}>
                     <ListItemText primary={room.title} />
                     <IconButton id={room.title} onClick={(e) => {
-                        console.log(e.currentTarget)
+                        props.clearMessages()                        
                         props.setCurrentChatroom(e.currentTarget.id)
                         props.hubConnection.invoke("AddToGroup", e.currentTarget.id, `${props.user.firstName} ${props.user.lastName}`)
                     }}><Add /></IconButton>
