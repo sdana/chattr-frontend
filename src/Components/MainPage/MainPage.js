@@ -14,6 +14,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Chatroom from "../Chatroom/Chatroom"
 import { HubConnectionBuilder, LogLevel } from "@aspnet/signalr"
 import PopulateChatroomList from "../Chatroom/PopulateChatroomList"
+import 'typeface-roboto';
 
 //use new materialUI typography variants
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
@@ -53,6 +54,7 @@ class MainPage extends React.Component {
     user: {},
     logout: false,
     showDrawer: false,
+    settingsPage: false,
     chatrooms: [],
     currentChatroom: "",
     messages: [],
@@ -171,6 +173,10 @@ class MainPage extends React.Component {
       ? 
       <Redirect to="/" /> 
       :
+        (this.state.settingsPage)
+          ?
+          <Redirect to="/userSettings" />
+          :
       <React.Fragment>
       <div className={classes.root}>
         <AppBar position="static">
@@ -218,7 +224,7 @@ class MainPage extends React.Component {
                   open={open}
                   onClose={this.handleClose}
                 >
-                  <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+                  <MenuItem onClick={() => {this.setState({settingsPage: true}); this.handleClose()}}>Profile</MenuItem>
                   <MenuItem onClick={() => {
                     this.handleClose()
                     this.logout()

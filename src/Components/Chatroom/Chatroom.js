@@ -4,6 +4,7 @@ import api from "../Api/Api"
 import PreviousMessages from "./PreviousMessages"
 import Button from "@material-ui/core/Button"
 import TextField from "@material-ui/core/TextField"
+import 'typeface-roboto';
 
 export default class Chatroom extends Component {
 
