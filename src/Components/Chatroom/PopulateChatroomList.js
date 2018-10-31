@@ -23,8 +23,10 @@ const PopulateChatroomList = (props) => {
                     <ListItemText primary={room.title} />
                     <IconButton id={room.title} onClick={(e) => {
                         props.clearMessages()                        
-                        props.setCurrentChatroom(e.currentTarget.id)
-                        props.hubConnection.invoke("AddToGroup", e.currentTarget.id, `${props.user.firstName} ${props.user.lastName}`)
+                        props.removeFromChatroom()
+                        props.setCurrentChatroom(e, e.currentTarget.id)
+                        // props.setCurrentChatroom(e, e.currentTarget.id)
+                        // props.hubConnection.invoke("AddToGroup", e.currentTarget.id, `${props.user.firstName} ${props.user.lastName}`)
                     }}><Add /></IconButton>
                     </ListItem>
                     </div>

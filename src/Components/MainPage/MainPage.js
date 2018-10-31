@@ -74,8 +74,15 @@ class MainPage extends React.Component {
         
         });
         
-        hubConnection.on("downloadMessage", incomingMessage =>{
-            this.receiveMessage(incomingMessage)
+        hubConnection.on("downloadMessage", (incomingMessage, groupName) =>{
+            // this.receiveMessage(incomingMessage, groupName)
+            console.log(groupName)
+            let newMessage = this.state.messages
+            newMessage.push(incomingMessage)
+            // this.setState({messages: newMessage})
+            this.setState((prevState) => {
+              return {messages: newMessage}
+            })
         })
 
         hubConnection.on("downloadPreviousMessages", chatroomName => {
@@ -85,11 +92,21 @@ class MainPage extends React.Component {
       
   }
 
-  receiveMessage = (incomingMessage) => {
-    let newMessage = this.state.messages
-            newMessage.push(incomingMessage)
-            this.setState({messages: newMessage})
+  removeFromChatroom = () => {
+    if (this.state.currentChatroom){
+      this.state.hubConnection.invoke("RemoveFromChat", this.state.currentChatroom)
+    }
   }
+
+  // receiveMessage = (incomingMessage, groupName) => {
+  //   console.log(groupName)
+  //   let newMessage = this.state.messages
+  //           newMessage.push(incomingMessage)
+  //           // this.setState({messages: newMessage})
+  //           this.setState((prevState) => {
+  //             return {messages: newMessage}
+  //           })
+  // }
 
   sendMessage = (e, message) => {
     e.preventDefault()
@@ -130,8 +147,12 @@ class MainPage extends React.Component {
     this.setState({ anchorEl: null });
   };
 
-  setCurrentChatroom = (room) => {
-    this.setState({currentChatroom: room})
+  setCurrentChatroom = (e, room) => {
+    // this.setState({currentChatroom: room})
+    this.state.hubConnection.invoke("AddToGroup", e.currentTarget.id, `${this.state.user.firstName} ${this.state.user.lastName}`)
+    this.setState(() => {
+      return {currentChatroom: room}
+    })
   }
 
   render() {
@@ -139,7 +160,7 @@ class MainPage extends React.Component {
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
     const sideList = (
-      <PopulateChatroomList user={this.state.user} setCurrentChatroom={this.setCurrentChatroom} hubConnection={this.state.hubConnection} chatrooms={this.state.chatrooms} toggleDrawer={this.toggleDrawer} clearMessages={this.clearMessagesOnRoomChange}/>
+      <PopulateChatroomList user={this.state.user} setCurrentChatroom={this.setCurrentChatroom} hubConnection={this.state.hubConnection} chatrooms={this.state.chatrooms} toggleDrawer={this.toggleDrawer} clearMessages={this.clearMessagesOnRoomChange} removeFromChatroom={this.removeFromChatroom}/>
     )
 
     return (
