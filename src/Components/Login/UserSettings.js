@@ -18,9 +18,7 @@ export default class UserSettings extends Component {
         open: false,
         firstName: "",
         lastName: "",
-        newPassword1: "",
-        newPassword2: "",
-        oldPassword: "",
+        avatarUrl: "",
         user: {},
     }
 
@@ -40,40 +38,17 @@ export default class UserSettings extends Component {
         this.setState({open: false})
     }
 
-    changePassword = () => {
-        if (this.state.oldPassword !== this.state.user.password) {
-            alert("password incorrect")
-        }
-        else if (this.state.newPassword1 !== this.state.newPassword2){
-            alert("New passwords do not match")
-        }
-        else {
-
-        }
-    }
-
     submitChanges = () => {
         const userToken = sessionStorage.getItem("loginToken")
-        let changedPassword = ""
-        // if (this.state.newPassword1 !== "" || this.state.newPassword2 !== ""){
-        //     if (this.state.user.password !== this.state.oldPassword){
-        //         alert("Password Incorrect")
-        //     }
-        //     else if (this.state.newPassword1 !== this.state.newPassword2){
-        //         alert("New passwords do not match")
-        //     }
-        //     else {
-        //         changedPassword = this.state.newPassword1
-        //     }
-        // }
         const edits = {
-            id: this.state.user.id,
-            firstName: this.state.firstName,
-            lastName: this.state.lastName,
-            password: changedPassword
+            Id: this.state.user.id,
+            firstName: (this.state.firstName) ? this.state.firstName : this.state.user.firstName,
+            lastName: (this.state.lastName) ? this.state.lastName : this.state.user.lastName,
+            avatarUrl: this.state.avatarUrl
         }
 
-        api.editUser(userToken, edits).then(res => console.log(res))
+        api.editUser(userToken, edits, this.state.user.id).then(res => console.log(res))
+        .then(this.setState({redirect: true}))
 
     }
 
@@ -82,7 +57,7 @@ export default class UserSettings extends Component {
             return (
                 <React.Fragment>
                     <Typography variant="headline">Change Account Information</Typography>
-                    <form onSubmit={this.registerUser}>
+                    <form onSubmit={(e) => {e.preventDefault(); this.submitChanges()}}>
                         <TextField
                             id="firstName"
                             label="First Name"
@@ -92,7 +67,6 @@ export default class UserSettings extends Component {
                             defaultValue={this.state.user.firstName}
                             InputLabelProps={{ shrink: true }}
                             autoFocus
-                            required
                             onChange={this.handleFieldChange}
                         />
                         <TextField
@@ -103,35 +77,19 @@ export default class UserSettings extends Component {
                             variant="outlined"
                             defaultValue={this.state.user.lastName}
                             InputLabelProps={{ shrink: true }}
-                            required
                             onChange={this.handleFieldChange}
                         />
                         <TextField
-                            id="oldPassword"
-                            label="Current Password"
-                            type="password"
-                            name="oldPassword"
+                            id="avatarUrl"
+                            label="Avatar Url"
+                            type="text"
+                            name="avatarUrl"
                             variant="outlined"
-                            value={this.state.user.password}
+                            defaultValue={this.state.user.avatarUrl}
+                            InputLabelProps={{ shrink: true }}
                             onChange={this.handleFieldChange}
                         />
-                        <TextField
-                            id="newPassword1"
-                            label="New Password"
-                            type="password"
-                            name="newPassword1"
-                            variant="outlined"
-                            onChange={this.handleFieldChange}
-                        />
-                        <TextField
-                            id="newPassword2"
-                            label="New Password Again"
-                            type="password"
-                            name="newPassword2"
-                            variant="outlined"
-                            onChange={this.handleFieldChange}
-                        />
-                        <Button variant="contained" color="primary" id="registerButton" type="submit" onSubmit={(e) => {e.preventDefault(); this.submitChanges()}}>Submit Changes</Button>
+                        <Button variant="contained" color="primary" id="registerButton" type="submit">Submit Changes</Button>
 
                         </form>
                         

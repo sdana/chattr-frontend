@@ -113,6 +113,11 @@ class MainPage extends React.Component {
   //           })
   // }
 
+  getUpdatedUserInfo = () => {
+    const userToken = sessionStorage.getItem("loginToken")
+    api.userDetails(userToken).then(res => this.setState({user: res}))
+  }
+
   sendMessage = (e, message) => {
     e.preventDefault()
     const userToken = sessionStorage.getItem("loginToken")
@@ -176,7 +181,8 @@ class MainPage extends React.Component {
         (this.state.settingsPage)
           ?
           <Redirect to="/userSettings" />
-          :
+          
+      :
       <React.Fragment>
       <div className={classes.root}>
         <AppBar position="static">
