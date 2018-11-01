@@ -9,6 +9,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import Avatar from "@material-ui/core/Avatar"
 import api from "../Api/Api"
 import Drawer from '@material-ui/core/Drawer';
 import Chatroom from "../Chatroom/Chatroom"
@@ -44,7 +45,10 @@ const styles = {
   },
   headline: {
     display: 'block'
-  }
+  },
+  // avatar: {
+  //   borderRadius: '40%',
+  // }
 };
 
 class MainPage extends React.Component {
@@ -215,7 +219,7 @@ class MainPage extends React.Component {
                   onClick={this.handleMenu}
                   color="inherit"
                 >
-                  <AccountCircle />
+                  {(this.state.user.avatarUrl) ? <Avatar src={this.state.user.avatarUrl} /> : <AccountCircle />}
                 </IconButton>
                 <Menu
                   id="menu-appbar"

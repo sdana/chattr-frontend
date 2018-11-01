@@ -44,7 +44,7 @@ export default class UserSettings extends Component {
             Id: this.state.user.id,
             firstName: (this.state.firstName) ? this.state.firstName : this.state.user.firstName,
             lastName: (this.state.lastName) ? this.state.lastName : this.state.user.lastName,
-            avatarUrl: this.state.avatarUrl
+            avatarUrl: (this.state.avatarUrl) ? this.state.avatarUrl : this.state.user.avatarUrl
         }
 
         api.editUser(userToken, edits, this.state.user.id)

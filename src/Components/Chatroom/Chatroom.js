@@ -19,12 +19,6 @@ export default class Chatroom extends Component {
         this.setState(stateToChange)
       }
 
-      componentDidMount = () => {
-        const userToken = sessionStorage.getItem("loginToken")
-        // api.getPreviousChatroomMessages(userToken, this.props.currentChatroom).then(res => this.setState({previousMessages: res}))
-      }
-
-
     render(){
 
         return(
