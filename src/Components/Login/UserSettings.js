@@ -47,8 +47,8 @@ export default class UserSettings extends Component {
             avatarUrl: this.state.avatarUrl
         }
 
-        api.editUser(userToken, edits, this.state.user.id).then(res => console.log(res))
-        .then(this.setState({redirect: true}))
+        api.editUser(userToken, edits, this.state.user.id)
+        .then(this.setState((prevState) => {return {redirect: !prevState.redirect}}))
 
     }
 

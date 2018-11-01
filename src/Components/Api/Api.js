@@ -47,7 +47,7 @@ class Api {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(userEdits)
-        }).then(res => res.text())
+        })
     }
 
     getAllChatrooms = (token) => {

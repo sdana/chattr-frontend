@@ -63,7 +63,7 @@ class MainPage extends React.Component {
 
   componentDidMount = () => {
     const userToken = sessionStorage.getItem("loginToken")
-    api.userDetails(userToken).then(res => this.setState({user: res}))
+    api.userDetails(userToken).then(res => this.setState( (prevState) => {return {user: res}}))
     api.getAllChatrooms(userToken).then(res => this.setState({chatrooms: res, userToken: userToken}))
 
     const hubConnection = new HubConnectionBuilder()
@@ -102,6 +102,7 @@ class MainPage extends React.Component {
       this.state.hubConnection.invoke("RemoveFromChat", this.state.currentChatroom, `${this.state.user.firstName} ${this.state.user.lastName}`)
     }
   }
+
 
   // receiveMessage = (incomingMessage, groupName) => {
   //   console.log(groupName)
