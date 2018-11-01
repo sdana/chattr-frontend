@@ -127,11 +127,17 @@ class MainPage extends React.Component {
     e.preventDefault()
     const userToken = sessionStorage.getItem("loginToken")
     let user = `${this.state.user.firstName} ${this.state.user.lastName}`
+    let avatar = `${this.state.user.avatarUrl}`
+    let newMessage = {
+      user: user,
+      avatar: avatar,
+      message: message
+    }
     console.log("sending message", message)
     if (this.state.hubConnection){
       console.log("Sending message")
-      this.state.hubConnection.invoke("NewMessage", message, this.state.currentChatroom, user).catch(err => console.error(err.toString()))
-      api.writeMessageToDb(message, this.state.currentChatroom, this.state.user.id, userToken)
+      this.state.hubConnection.invoke("NewMessage", newMessage, this.state.currentChatroom,).catch(err => console.error(err.toString()))
+      api.writeMessageToDb(newMessage.message, this.state.currentChatroom, this.state.user.id, userToken)
     }
   
   }

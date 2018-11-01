@@ -4,6 +4,7 @@ import api from "../Api/Api"
 import PreviousMessages from "./PreviousMessages"
 import Button from "@material-ui/core/Button"
 import TextField from "@material-ui/core/TextField"
+import Avatar from "@material-ui/core/Avatar"
 import 'typeface-roboto';
 
 export default class Chatroom extends Component {
@@ -27,7 +28,7 @@ export default class Chatroom extends Component {
                 <ul>
                 <PreviousMessages messages={this.props.previousMessages} />
                     
-                    {this.props.messages.map((message,index) => {return <li key={index}>{message}</li>})}
+                    {this.props.messages.map((message,index) => {return <li key={index}><Avatar src={message.avatar} />{message.user}: {message.message}</li>})}
                 </ul>
             </div>
         <form onSubmit={(e) => {
