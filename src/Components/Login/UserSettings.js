@@ -44,7 +44,8 @@ export default class UserSettings extends Component {
             Id: this.state.user.id,
             firstName: (this.state.firstName) ? this.state.firstName : this.state.user.firstName,
             lastName: (this.state.lastName) ? this.state.lastName : this.state.user.lastName,
-            avatarUrl: (this.state.avatarUrl) ? this.state.avatarUrl : this.state.user.avatarUrl
+            avatarUrl: (this.state.avatarUrl) ? this.state.avatarUrl : this.state.user.avatarUrl,
+            isActive: true
         }
 
         api.editUser(userToken, edits, this.state.user.id)
@@ -106,7 +107,12 @@ export default class UserSettings extends Component {
                             InputLabelProps={{ shrink: true }}
                             onChange={this.handleFieldChange}
                         />
-                        <Button variant="contained" color="primary" id="registerButton" type="submit">Submit Changes</Button>
+                        <Button variant="contained" color="primary" id="registerButton" type="submit">
+                            {(this.state.firstName !== "" || this.state.lastName !== "" || this.state.avatarUrl !== "") 
+                                ? "Submit Changes" 
+                                : "Back Home"
+                            }
+                        </Button>
                     </form>
 
                     <Button variant="text" color="secondary" onClick={() => this.setState({open: true})}>Delete Account</Button>
