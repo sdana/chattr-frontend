@@ -86,6 +86,19 @@ class Api {
         }).then(e => e.json()).catch(err => console.log(err))
     }
 
+    createChatRoom = (token, roomName) => {
+        return fetch("http://10.0.0.205:5555/api/chatroom", {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                Title: roomName
+            })
+        }).then(res => res.json())
+    }
+
 }
 
 const api = new Api()
