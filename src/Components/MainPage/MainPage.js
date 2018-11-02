@@ -169,8 +169,12 @@ class MainPage extends React.Component {
   };
 
   setCurrentChatroom = (e, room) => {
-    // this.setState({currentChatroom: room})
-    this.state.hubConnection.invoke("AddToGroup", e.currentTarget.id, `${this.state.user.firstName} ${this.state.user.lastName}`)
+    let joinMessage = {
+      avatar: this.state.user.avatarUrl,
+      user: `${this.state.user.firstName} ${this.state.user.lastName}`,
+      message: `Has joined ${e.currentTarget.id}`
+    }
+    this.state.hubConnection.invoke("AddToGroup", e.currentTarget.id, joinMessage)
     this.setState(() => {
       return {currentChatroom: room}
     })
