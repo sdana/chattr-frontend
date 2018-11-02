@@ -1,11 +1,10 @@
-import React, { Component } from "react"
+import React from "react"
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
 import Add from "@material-ui/icons/Add"
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
-import signalR from "@aspnet/signalr"
 
 const classes = {
     list: {

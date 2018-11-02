@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import './Chatroom.css';
-import api from "../Api/Api"
 import PreviousMessages from "./PreviousMessages"
 import Button from "@material-ui/core/Button"
 import Typography from "@material-ui/core/Typography"
 import AccountCircle from "@material-ui/icons/AccountCircle"
-import TextField from "@material-ui/core/TextField"
 import Avatar from "@material-ui/core/Avatar"
 import 'typeface-roboto';
 
@@ -31,10 +29,10 @@ export default class Chatroom extends Component {
                 <PreviousMessages messages={this.props.previousMessages} />
                     {this.props.messages.map((message,index) => {
                         return <li key={index}>
-                            {(message.avatar != "null" || message.avatar == "") 
+                            {(message.avatar !== "null" || message.avatar === "") 
                             ? <Avatar src={message.avatar} /> 
                             : <AccountCircle />}
-                            <Typography variant="h6">{message.user}: {message.message}</Typography>
+                            <Typography variant="h6" color="inherit">{message.user}: {message.message}</Typography>
                         </li>}
                     )}
                 </ul>

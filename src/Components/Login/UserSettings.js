@@ -52,11 +52,28 @@ export default class UserSettings extends Component {
 
     }
 
+    setUserInactive = () => {
+        const userToken = sessionStorage.getItem("loginToken")
+        const edits = {
+            Id: this.state.user.id,
+            firstName: (this.state.firstName) ? this.state.firstName : this.state.user.firstName,
+            lastName: (this.state.lastName) ? this.state.lastName : this.state.user.lastName,
+            avatarUrl: (this.state.avatarUrl) ? this.state.avatarUrl : this.state.user.avatarUrl,
+            isActive: false
+        }
+
+        api.editUser(userToken, edits, this.state.user.id)
+        .then( () => {
+            sessionStorage.removeItem("loginToken")
+            this.setState((prevState) => {return {redirect: !prevState.redirect}})
+        })
+    }
+
     render(){
         if (!this.state.redirect){
             return (
                 <React.Fragment>
-                    <Typography variant="headline">Change Account Information</Typography>
+                    <Typography variant="h3">Change Account Information</Typography>
                     <form onSubmit={(e) => {e.preventDefault(); this.submitChanges()}}>
                         <TextField
                             id="firstName"
@@ -90,28 +107,28 @@ export default class UserSettings extends Component {
                             onChange={this.handleFieldChange}
                         />
                         <Button variant="contained" color="primary" id="registerButton" type="submit">Submit Changes</Button>
+                    </form>
 
-                        </form>
+                    <Button variant="text" color="secondary" onClick={() => this.setState({open: true})}>Delete Account</Button>
                         
                     
                     
-                    {/* <-----------------Alert Dialog if user is already registered --------------------------------------------->*/}
+                    {/* <-----------------Alert Dialog if user wants to delete account --------------------------------------------->*/}
                     <Dialog 
                         open={this.state.open}
                         onClose={this.handleClose}
                         aria-labelledby="alert-dialog-title"
                         aria-describedby="alert-dialog-description"
                     >
-                    <DialogTitle id="alert-dialog-title">{"User Exists"}</DialogTitle>
                          <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                I'm sorry, that email address is already registered
-                            </DialogContentText>
+                            {/* <DialogContentText id="alert-dialog-description"> */}
+                                <Typography variant="h4" color="secondary">Are you sure you want to delete your account?</Typography>
+                                <Typography variant="h6">This action cannot be undone</Typography> 
+                            {/* </DialogContentText> */}
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={this.handleClose} color="primary">
-                            Close
-                            </Button>
+                            <Button onClick={this.handleClose} color="primary">Cancel</Button>
+                            <Button color="secondary" variant="contained" onClick={this.setUserInactive}>Confirm Delete</Button>
                         </DialogActions>
                     </Dialog>
 
