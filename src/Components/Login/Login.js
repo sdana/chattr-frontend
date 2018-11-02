@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {Redirect} from "react-router-dom"
 import api from "../Api/Api"
+import Grid from "@material-ui/core/Grid"
 import TextField from "@material-ui/core/TextField"
 import Button from "@material-ui/core/Button"
 import Dialog from '@material-ui/core/Dialog';
@@ -8,7 +9,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Teeth from "../img/lips.png"
 import 'typeface-roboto';
+import { Typography } from '@material-ui/core';
 
 class Login extends Component {
 
@@ -67,7 +70,11 @@ class Login extends Component {
         else
         return(
             <React.Fragment>
+                <div style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center', marginTop:30}}>
+                <span><Typography variant="h1">CHATTR</Typography></span>
+                <img src={Teeth} alt="teeth"/>
                 <form onSubmit={(e) => this.handleLogin(e)}>
+                <div style={{display:'flex',flexDirection:'row',justifyContent:"space-around"}}>
                 <TextField
                     id="username"
                     label="Email"
@@ -76,6 +83,7 @@ class Login extends Component {
                     autoComplete="email"
                     variant="outlined"
                     value={this.state.username}
+                    style={{margin:10}}
                     autoFocus
                     required
                     onChange={this.handleFieldChange}
@@ -87,12 +95,17 @@ class Login extends Component {
                     name="password"
                     variant="outlined"
                     value={this.state.password}
+                    style={{margin:10}}
                     required
                     onChange={this.handleFieldChange}
                 />
-                <Button variant="contained" color="primary" id="loginButton" type="submit">Login</Button>
-                <Button variant="contained" color="secondary" id="registerButton" onClick={this.registerNewAccount}>New User?</Button>
+                </div>
+                <div style={{display:'flex',flexDirection:'row', justifyContent:'center'}}>
+                <Button variant="contained" color="primary" id="loginButton" type="submit" style={{margin:15}}>Login</Button>
+                <Button variant="contained" color="secondary" id="registerButton" style={{margin:15}} onClick={this.registerNewAccount}>New User?</Button>
+                </div>
                 </form>
+                </div>
 
                 {/* <-----------------Alert Dialog if login incorrect --------------------------------------------->*/}
                 <Dialog 
@@ -113,7 +126,7 @@ class Login extends Component {
                             </Button>
                         </DialogActions>
                     </Dialog>
-
+            
         </React.Fragment>
         )
  

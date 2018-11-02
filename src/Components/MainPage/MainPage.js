@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import ArrowBack from "@material-ui/icons/ArrowBack"
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import Avatar from "@material-ui/core/Avatar"
@@ -253,7 +254,7 @@ class MainPage extends React.Component {
               messages={this.state.messages} 
               sendMessage={this.sendMessage} 
               previousMessages={this.state.previousMessages} /> 
-          : <div>
+          : <div style={{marginTop:50}}>
               <Typography variant="h2" color="textPrimary" align="center">Welcome to Chattr!</Typography>
               <Typography variant="h4" color="textSecondary" align="center">Please select a chat room from the left menu</Typography>
             </div>}
