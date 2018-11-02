@@ -31,7 +31,7 @@ export default class Chatroom extends Component {
                 <PreviousMessages messages={this.props.previousMessages} />
                     {this.props.messages.map((message,index) => {
                         return <li key={index}>
-                            {(message.avatar != "null") 
+                            {(message.avatar != "null" || message.avatar == "") 
                             ? <Avatar src={message.avatar} /> 
                             : <AccountCircle />}
                             <Typography variant="h6">{message.user}: {message.message}</Typography>
