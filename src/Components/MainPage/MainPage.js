@@ -17,6 +17,7 @@ import Chatroom from "../Chatroom/Chatroom"
 import { HubConnectionBuilder, LogLevel } from "@aspnet/signalr"
 import PopulateChatroomList from "../Chatroom/PopulateChatroomList"
 import 'typeface-roboto';
+import Lips from "../img/lips.png"
 
 //use new materialUI typography variants
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
@@ -206,7 +207,7 @@ class MainPage extends React.Component {
           {sideList}
         </Drawer>
             <Typography variant="h5" color="inherit" className={classes.grow}>
-              Welcome to Chattr {(this.state.user) ? `${this.state.user.firstName} ${this.state.user.lastName}!` : ""}
+              <img src={Lips} alt="lips" style={{height:40, marginRight:15}}></img> {(this.state.user) ? `${this.state.user.firstName} ${this.state.user.lastName}!` : ""}
             </Typography>
             <Typography variant="title" color="inherit" className={classes.grow}>
               {(this.state.currentChatroom) ? `Chatting in ${this.state.currentChatroom}` : ""}
@@ -235,12 +236,16 @@ class MainPage extends React.Component {
                   open={open}
                   onClose={this.handleClose}
                 >
-                  <MenuItem onClick={() => {this.setState({settingsPage: true}); this.handleClose()}}>Profile</MenuItem>
+                  <MenuItem onClick={() => {
+                    this.setState({settingsPage: true})
+                    this.handleClose()}}>
+                    Profile
+                  </MenuItem>
                   <MenuItem onClick={() => {
                     this.handleClose()
-                    this.logout()
-
-                  }}>Logout</MenuItem>
+                    this.logout()}}>
+                    Logout
+                  </MenuItem>
                 </Menu>
               </div>
             )}

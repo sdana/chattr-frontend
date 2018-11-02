@@ -72,7 +72,7 @@ class Login extends Component {
             <React.Fragment>
                 <div style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center', marginTop:30}}>
                 <span><Typography variant="h1">CHATTR</Typography></span>
-                <img src={Teeth} alt="teeth"/>
+                <img src={Teeth} alt="teeth" style={{height:300}}/>
                 <form onSubmit={(e) => this.handleLogin(e)}>
                 <div style={{display:'flex',flexDirection:'row',justifyContent:"space-around"}}>
                 <TextField
