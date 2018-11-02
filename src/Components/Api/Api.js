@@ -39,6 +39,17 @@ class Api {
         }).then(res => res.json())
     }
 
+    editUser = (token, userEdits, userId) => {
+        return fetch(`http://10.0.0.205:5555/api/user/${userId}`, {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(userEdits)
+        })
+    }
+
     getAllChatrooms = (token) => {
         return fetch("http://10.0.0.205:5555/api/chatroom",{
             method: "GET",

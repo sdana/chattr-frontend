@@ -16,8 +16,9 @@
   }
   
   input {
-    width: 90vw;
+    width: 91%;
     height: 30px;
+    display: inline-block;
   }
   
   h1 {
@@ -25,10 +26,10 @@
     size: 3em;
   }
   
-  li:nth-child(even) {
+  #main li:nth-child(even) {
     color: blue;
   }
   
-  li:nth-child(odd) {
+  #main li:nth-child(odd) {
     color: red;
   }

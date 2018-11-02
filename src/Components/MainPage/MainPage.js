@@ -9,11 +9,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import Avatar from "@material-ui/core/Avatar"
 import api from "../Api/Api"
 import Drawer from '@material-ui/core/Drawer';
 import Chatroom from "../Chatroom/Chatroom"
 import { HubConnectionBuilder, LogLevel } from "@aspnet/signalr"
 import PopulateChatroomList from "../Chatroom/PopulateChatroomList"
+import 'typeface-roboto';
 
 //use new materialUI typography variants
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
@@ -41,6 +43,12 @@ const styles = {
   typography: {
     useNextVariants: true,
   },
+  headline: {
+    display: 'block'
+  },
+  // avatar: {
+  //   borderRadius: '40%',
+  // }
 };
 
 class MainPage extends React.Component {
@@ -50,6 +58,7 @@ class MainPage extends React.Component {
     user: {},
     logout: false,
     showDrawer: false,
+    settingsPage: false,
     chatrooms: [],
     currentChatroom: "",
     messages: [],
@@ -58,7 +67,7 @@ class MainPage extends React.Component {
 
   componentDidMount = () => {
     const userToken = sessionStorage.getItem("loginToken")
-    api.userDetails(userToken).then(res => this.setState({user: res}))
+    api.userDetails(userToken).then(res => this.setState( (prevState) => {return {user: res}}))
     api.getAllChatrooms(userToken).then(res => this.setState({chatrooms: res, userToken: userToken}))
 
     const hubConnection = new HubConnectionBuilder()
@@ -74,8 +83,15 @@ class MainPage extends React.Component {
         
         });
         
-        hubConnection.on("downloadMessage", incomingMessage =>{
-            this.receiveMessage(incomingMessage)
+        hubConnection.on("downloadMessage", (incomingMessage, groupName) =>{
+            // this.receiveMessage(incomingMessage, groupName)
+            console.log(groupName)
+            let newMessage = this.state.messages
+            newMessage.push(incomingMessage)
+            // this.setState({messages: newMessage})
+            this.setState((prevState) => {
+              return {messages: newMessage}
+            })
         })
 
         hubConnection.on("downloadPreviousMessages", chatroomName => {
@@ -85,21 +101,43 @@ class MainPage extends React.Component {
       
   }
 
-  receiveMessage = (incomingMessage) => {
-    let newMessage = this.state.messages
-            newMessage.push(incomingMessage)
-            this.setState({messages: newMessage})
+  removeFromChatroom = () => {
+    if (this.state.currentChatroom){
+      this.state.hubConnection.invoke("RemoveFromChat", this.state.currentChatroom, `${this.state.user.firstName} ${this.state.user.lastName}`)
+    }
+  }
+
+
+  // receiveMessage = (incomingMessage, groupName) => {
+  //   console.log(groupName)
+  //   let newMessage = this.state.messages
+  //           newMessage.push(incomingMessage)
+  //           // this.setState({messages: newMessage})
+  //           this.setState((prevState) => {
+  //             return {messages: newMessage}
+  //           })
+  // }
+
+  getUpdatedUserInfo = () => {
+    const userToken = sessionStorage.getItem("loginToken")
+    api.userDetails(userToken).then(res => this.setState({user: res}))
   }
 
   sendMessage = (e, message) => {
     e.preventDefault()
     const userToken = sessionStorage.getItem("loginToken")
     let user = `${this.state.user.firstName} ${this.state.user.lastName}`
+    let avatar = `${this.state.user.avatarUrl}`
+    let newMessage = {
+      user: user,
+      avatar: avatar,
+      message: message
+    }
     console.log("sending message", message)
     if (this.state.hubConnection){
       console.log("Sending message")
-      this.state.hubConnection.invoke("NewMessage", message, this.state.currentChatroom, user).catch(err => console.error(err.toString()))
-      api.writeMessageToDb(message, this.state.currentChatroom, this.state.user.id, userToken)
+      this.state.hubConnection.invoke("NewMessage", newMessage, this.state.currentChatroom,).catch(err => console.error(err.toString()))
+      api.writeMessageToDb(newMessage.message, this.state.currentChatroom, this.state.user.id, userToken)
     }
   
   }
@@ -130,8 +168,16 @@ class MainPage extends React.Component {
     this.setState({ anchorEl: null });
   };
 
-  setCurrentChatroom = (room) => {
-    this.setState({currentChatroom: room})
+  setCurrentChatroom = (e, room) => {
+    let joinMessage = {
+      avatar: this.state.user.avatarUrl,
+      user: `${this.state.user.firstName} ${this.state.user.lastName}`,
+      message: `Has joined ${e.currentTarget.id}`
+    }
+    this.state.hubConnection.invoke("AddToGroup", e.currentTarget.id, joinMessage)
+    this.setState(() => {
+      return {currentChatroom: room}
+    })
   }
 
   render() {
@@ -139,13 +185,18 @@ class MainPage extends React.Component {
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
     const sideList = (
-      <PopulateChatroomList user={this.state.user} setCurrentChatroom={this.setCurrentChatroom} hubConnection={this.state.hubConnection} chatrooms={this.state.chatrooms} toggleDrawer={this.toggleDrawer} clearMessages={this.clearMessagesOnRoomChange}/>
+      <PopulateChatroomList user={this.state.user} setCurrentChatroom={this.setCurrentChatroom} hubConnection={this.state.hubConnection} chatrooms={this.state.chatrooms} toggleDrawer={this.toggleDrawer} clearMessages={this.clearMessagesOnRoomChange} removeFromChatroom={this.removeFromChatroom}/>
     )
 
     return (
       (this.state.logout) 
       ? 
       <Redirect to="/" /> 
+      :
+        (this.state.settingsPage)
+          ?
+          <Redirect to="/userSettings" />
+          
       :
       <React.Fragment>
       <div className={classes.root}>
@@ -178,7 +229,7 @@ class MainPage extends React.Component {
                   onClick={this.handleMenu}
                   color="inherit"
                 >
-                  <AccountCircle />
+                  {(this.state.user.avatarUrl) ? <Avatar src={this.state.user.avatarUrl} /> : <AccountCircle />}
                 </IconButton>
                 <Menu
                   id="menu-appbar"
@@ -194,7 +245,7 @@ class MainPage extends React.Component {
                   open={open}
                   onClose={this.handleClose}
                 >
-                  <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+                  <MenuItem onClick={() => {this.setState({settingsPage: true}); this.handleClose()}}>Profile</MenuItem>
                   <MenuItem onClick={() => {
                     this.handleClose()
                     this.logout()
@@ -207,7 +258,7 @@ class MainPage extends React.Component {
         </AppBar>
       </div>
       <div>
-        {(this.state.currentChatroom) ? <Chatroom currentRoom={this.state.currentChatroom} messages={this.state.messages} sendMessage={this.sendMessage} previousMessages={this.state.previousMessages} /> : null}
+        {(this.state.currentChatroom) ? <Chatroom currentRoom={this.state.currentChatroom} messages={this.state.messages} sendMessage={this.sendMessage} previousMessages={this.state.previousMessages} /> : <div><h1 className="headline">Welcome to Chattr!</h1><h3>Please select a chat room</h3></div>}
       </div>
     </React.Fragment>
     );

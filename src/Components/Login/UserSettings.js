@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {Redirect} from "react-router-dom"
 import api from "../Api/Api"
 import TextField from "@material-ui/core/TextField"
+import Typography from "@material-ui/core/Typography"
 import Button from "@material-ui/core/Button"
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -10,16 +11,20 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import 'typeface-roboto';
 
-export default class Register extends Component {
+export default class UserSettings extends Component {
 
     state = {
         redirect: false,
-        alreadyRegistered: false,
         open: false,
         firstName: "",
         lastName: "",
-        email: "",
-        password: ""
+        avatarUrl: "",
+        user: {},
+    }
+
+    componentDidMount = () => {
+        const userToken = sessionStorage.getItem("loginToken")
+        api.userDetails(userToken).then(res => this.setState({user: res}))
     }
 
     // Update state whenever an input field is edited
@@ -33,42 +38,35 @@ export default class Register extends Component {
         this.setState({open: false})
     }
 
-    registerUser = (e) => {
-        e.preventDefault()
-        api.userRegister(this.state.email, this.state.password, this.state.firstName, this.state.lastName)
-        .then(res => {
-            console.log(res)
-            if (res === "registered"){
-                this.setState({
-                    open: true,
-                    firstName: "",
-                    lastName: "",
-                    password: "",
-                    email: ""
-                })
-            }
-            else {
-                sessionStorage.setItem("loginToken", res)
-                this.setState({redirect: true})
-            }
-        })
+    submitChanges = () => {
+        const userToken = sessionStorage.getItem("loginToken")
+        const edits = {
+            Id: this.state.user.id,
+            firstName: (this.state.firstName) ? this.state.firstName : this.state.user.firstName,
+            lastName: (this.state.lastName) ? this.state.lastName : this.state.user.lastName,
+            avatarUrl: (this.state.avatarUrl) ? this.state.avatarUrl : this.state.user.avatarUrl
+        }
+
+        api.editUser(userToken, edits, this.state.user.id)
+        .then(this.setState((prevState) => {return {redirect: !prevState.redirect}}))
+
     }
 
     render(){
         if (!this.state.redirect){
             return (
                 <React.Fragment>
-                    <h1>Register for Chattr</h1>
-                    <form onSubmit={this.registerUser}>
+                    <Typography variant="headline">Change Account Information</Typography>
+                    <form onSubmit={(e) => {e.preventDefault(); this.submitChanges()}}>
                         <TextField
                             id="firstName"
                             label="First Name"
                             type="text"
                             name="firstName"
                             variant="outlined"
-                            value={this.state.firstName}
+                            defaultValue={this.state.user.firstName}
+                            InputLabelProps={{ shrink: true }}
                             autoFocus
-                            required
                             onChange={this.handleFieldChange}
                         />
                         <TextField
@@ -77,32 +75,25 @@ export default class Register extends Component {
                             type="text"
                             name="lastName"
                             variant="outlined"
-                            value={this.state.lastName}
-                            required
+                            defaultValue={this.state.user.lastName}
+                            InputLabelProps={{ shrink: true }}
                             onChange={this.handleFieldChange}
                         />
                         <TextField
-                            id="email"
-                            label="Email"
-                            type="email"
-                            name="email"
+                            id="avatarUrl"
+                            label="Avatar Url"
+                            type="text"
+                            name="avatarUrl"
                             variant="outlined"
-                            value={this.state.email}
-                            required
+                            defaultValue={this.state.user.avatarUrl}
+                            InputLabelProps={{ shrink: true }}
                             onChange={this.handleFieldChange}
                         />
-                        <TextField
-                            id="password"
-                            label="Password"
-                            type="password"
-                            name="password"
-                            variant="outlined"
-                            value={this.state.password}
-                            required
-                            onChange={this.handleFieldChange}
-                        />
-                        <Button variant="contained" color="primary" id="registerButton" type="submit">Create Account</Button>
-                    </form>
+                        <Button variant="contained" color="primary" id="registerButton" type="submit">Submit Changes</Button>
+
+                        </form>
+                        
+                    
                     
                     {/* <-----------------Alert Dialog if user is already registered --------------------------------------------->*/}
                     <Dialog 
