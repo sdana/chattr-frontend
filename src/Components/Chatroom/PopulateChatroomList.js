@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { Redirect } from "react-router-dom"
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
@@ -23,7 +24,8 @@ const classes = {
 
 class PopulateChatroomList extends Component {
     state = {
-        open: false
+        open: false,
+        redirect: false
     }
 
     handleClickOpen = () => {
@@ -64,26 +66,17 @@ class PopulateChatroomList extends Component {
                             this.props.clearMessages()                        
                             this.props.removeFromChatroom()
                             this.props.setCurrentChatroom(e, e.currentTarget.id)
-                            // props.setCurrentChatroom(e, e.currentTarget.id)
-                            // props.hubConnection.invoke("AddToGroup", e.currentTarget.id, `${props.user.firstName} ${props.user.lastName}`)
                         }} />
-                        {/* <IconButton id={room.title} onClick={(e) => {
-                            props.clearMessages()                        
-                            props.removeFromChatroom()
-                            props.setCurrentChatroom(e, e.currentTarget.id)
-                            // props.setCurrentChatroom(e, e.currentTarget.id)
-                            // props.hubConnection.invoke("AddToGroup", e.currentTarget.id, `${props.user.firstName} ${props.user.lastName}`)
-                        }}><Add /></IconButton> */}
                         </ListItem>
                         </div>
             ))}
             </List>
-            <IconButton onClick={this.handleClickOpen}><Add /></IconButton>
+            <IconButton onClick={() => {this.handleClickOpen();}}><Add /></IconButton>
         </div>
         )}
 
         /*------------------------------------------Dialog for creating chat room ------------------------------------*/
-        if (this.state.open === true){
+        else if (this.state.open === true){
             return (
                 <React.Fragment>
                 <Dialog
@@ -110,12 +103,17 @@ class PopulateChatroomList extends Component {
                 <Button onClick={this.handleClose} color="primary">
                     Cancel
                 </Button>
-                <Button variant="raised" onClick={() => { this.handleClose(); this.createNewChatRoom()}} color="primary">
+                <Button variant="raised" onClick={() => { this.props.toggleDrawer(); this.handleClose(); this.createNewChatRoom()}} color="primary">
                     Create
                 </Button>
                 </DialogActions>
             </Dialog>
             </React.Fragment>
+            )
+        }
+        else if (this.state.redirect === true){
+            return (
+                <Redirect to="/" />
             )
         }
         }

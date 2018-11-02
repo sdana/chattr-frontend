@@ -107,17 +107,6 @@ class MainPage extends React.Component {
     }
   }
 
-
-  // receiveMessage = (incomingMessage, groupName) => {
-  //   console.log(groupName)
-  //   let newMessage = this.state.messages
-  //           newMessage.push(incomingMessage)
-  //           // this.setState({messages: newMessage})
-  //           this.setState((prevState) => {
-  //             return {messages: newMessage}
-  //           })
-  // }
-
   getUpdatedUserInfo = () => {
     const userToken = sessionStorage.getItem("loginToken")
     api.userDetails(userToken).then(res => this.setState({user: res}))
@@ -185,7 +174,7 @@ class MainPage extends React.Component {
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
     const sideList = (
-      <PopulateChatroomList user={this.state.user} setCurrentChatroom={this.setCurrentChatroom} hubConnection={this.state.hubConnection} chatrooms={this.state.chatrooms} toggleDrawer={this.toggleDrawer} clearMessages={this.clearMessagesOnRoomChange} removeFromChatroom={this.removeFromChatroom}/>
+      <PopulateChatroomList toggleDrawer={this.toggleDrawer} user={this.state.user} setCurrentChatroom={this.setCurrentChatroom} hubConnection={this.state.hubConnection} chatrooms={this.state.chatrooms} toggleDrawer={this.toggleDrawer} clearMessages={this.clearMessagesOnRoomChange} removeFromChatroom={this.removeFromChatroom}/>
     )
 
     return (
