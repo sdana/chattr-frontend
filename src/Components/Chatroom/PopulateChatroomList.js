@@ -14,13 +14,16 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from "@material-ui/core/Divider"
 import api from "../Api/Api"
+
 
 const classes = {
     list: {
         width: 250,
-      }
+      },  
 }
+
 
 class PopulateChatroomList extends Component {
     state = {
@@ -58,7 +61,8 @@ class PopulateChatroomList extends Component {
         return (   
             <div className={classes.list}>
                 <List>
-                    <Typography variant="display1">Chat Rooms</Typography>
+                    <Typography variant="display1" style={{margin:20}}>Chat Rooms</Typography>
+                    <Divider />
                     {this.props.chatrooms.map((room, index) => (
                     <div key={index}>
                         <ListItem button key={room.title} onClick={() => this.props.toggleDrawer(false)}>
@@ -71,7 +75,8 @@ class PopulateChatroomList extends Component {
                         </div>
             ))}
             </List>
-            <IconButton onClick={() => {this.handleClickOpen();}}><Add /></IconButton>
+            {/* <IconButton onClick={() => {this.handleClickOpen();}}><Add /></IconButton> */}
+            <Button variant="fab" color="primary" aria-label="add" style={{margin:20}} onClick={() => {this.handleClickOpen();}}><Add /></Button>
         </div>
         )}
 
@@ -96,6 +101,7 @@ class PopulateChatroomList extends Component {
                     label="Chat Name"
                     type="text"
                     fullWidth
+                    autoComplete="no"
                     onChange={this.handleFieldChange}
                 />
                 </DialogContent>

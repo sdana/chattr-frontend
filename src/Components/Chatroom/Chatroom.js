@@ -28,11 +28,12 @@ export default class Chatroom extends Component {
                 <ul>
                 <PreviousMessages messages={this.props.previousMessages} />
                     {this.props.messages.map((message,index) => {
-                        return <li key={index}>
+                        return <li key={index}><div style={{display:'inline-flex',justifyContent:'flex-start'}}>
                             {(message.avatar !== "null" || message.avatar === "") 
                             ? <Avatar src={message.avatar} /> 
-                            : <AccountCircle />}
+                            : <AccountCircle style={{height:40,width:40}}/>}
                             <Typography variant="h6" color="inherit">{message.user}: {message.message}</Typography>
+                            </div>
                         </li>}
                     )}
                 </ul>

@@ -204,10 +204,10 @@ class MainPage extends React.Component {
           </div>
           {sideList}
         </Drawer>
-            <Typography variant="h4" color="inherit" className={classes.grow}>
+            <Typography variant="h5" color="inherit" className={classes.grow}>
               Welcome to Chattr {(this.state.user) ? `${this.state.user.firstName} ${this.state.user.lastName}!` : ""}
             </Typography>
-            <Typography variant="h6" color="inherit" className={classes.grow}>
+            <Typography variant="title" color="inherit" className={classes.grow}>
               {(this.state.currentChatroom) ? `Chatting in ${this.state.currentChatroom}` : ""}
             </Typography>
             {auth && (
@@ -218,7 +218,7 @@ class MainPage extends React.Component {
                   onClick={this.handleMenu}
                   color="inherit"
                 >
-                  {(this.state.user.avatarUrl) ? <Avatar src={this.state.user.avatarUrl} /> : <AccountCircle />}
+                  {(this.state.user.avatarUrl) ? <Avatar src={this.state.user.avatarUrl} /> : <AccountCircle style={{height:40,width:40}}/>}
                 </IconButton>
                 <Menu
                   id="menu-appbar"
@@ -247,7 +247,16 @@ class MainPage extends React.Component {
         </AppBar>
       </div>
       <div>
-        {(this.state.currentChatroom) ? <Chatroom currentRoom={this.state.currentChatroom} messages={this.state.messages} sendMessage={this.sendMessage} previousMessages={this.state.previousMessages} /> : <div><h1 className="headline">Welcome to Chattr!</h1><h3>Please select a chat room</h3></div>}
+        {(this.state.currentChatroom) 
+          ? <Chatroom 
+              currentRoom={this.state.currentChatroom} 
+              messages={this.state.messages} 
+              sendMessage={this.sendMessage} 
+              previousMessages={this.state.previousMessages} /> 
+          : <div>
+              <Typography variant="h2" color="textPrimary" align="center">Welcome to Chattr!</Typography>
+              <Typography variant="h4" color="textSecondary" align="center">Please select a chat room from the left menu</Typography>
+            </div>}
       </div>
     </React.Fragment>
     );
