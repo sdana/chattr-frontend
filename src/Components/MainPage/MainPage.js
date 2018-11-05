@@ -182,6 +182,10 @@ class MainPage extends React.Component {
     })
   }
 
+  joinChatAfterCreate = (room) => {
+    this.setState({currentChatroom: room})
+  }
+
   render() {
     const { classes } = this.props;
     const { auth, anchorEl } = this.state;
@@ -196,6 +200,7 @@ class MainPage extends React.Component {
         clearMessages={this.clearMessagesOnRoomChange}
         removeFromChatroom={this.removeFromChatroom}
         removeAllUsersFromChat={this.removeAllUsersFromChat}
+        joinChatAfterCreate={this.joinChatAfterCreate}
       />
     )
 

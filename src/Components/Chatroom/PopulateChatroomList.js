@@ -52,7 +52,10 @@ class PopulateChatroomList extends Component {
         }
         else {
             let token = sessionStorage.getItem("loginToken")
-            api.createChatRoom(token, this.state.name, this.props.user.id).then(res => console.log(res))
+            api.createChatRoom(token, this.state.name, this.props.user.id).then(res => {
+                console.log(res)
+                this.props.joinChatAfterCreate(this.state.name)
+            })
         }
     }
 
