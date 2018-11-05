@@ -59,7 +59,10 @@ class PopulateChatroomList extends Component {
     removeChatroom = (e) => {
         console.log(e.currentTarget.id)
         const token = sessionStorage.getItem("loginToken")
-        api.deleteChatRoom(token, e.currentTarget.id).then(res => console.log(res))
+        api.deleteChatRoom(token, e.currentTarget.id).then(res => {
+            console.log(res)
+            this.props.removeAllUsersFromChat(res.title)
+        })
     }
 
 

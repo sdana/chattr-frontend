@@ -62,6 +62,7 @@ class MainPage extends React.Component {
     logout: false,
     showDrawer: false,
     settingsPage: false,
+    redirectAfterChatClosed: false,
     chatrooms: [],
     currentChatroom: "",
     messages: [],
@@ -101,12 +102,22 @@ class MainPage extends React.Component {
             const userToken = sessionStorage.getItem("loginToken")
             api.getPreviousChatroomMessages(userToken, this.state.currentChatroom).then(res => this.setState({previousMessages: res}))
         })
+
+        hubConnection.on("chatClosed", groupName => {
+          this.removeFromChatroom()
+          this.setState({redirectAfterChatClosed: true})
+        })
       
+  }
+
+  removeAllUsersFromChat = (groupName) => {
+    this.state.hubConnection.invoke("RemoveAllUsersFromChat", groupName)
   }
 
   removeFromChatroom = () => {
     if (this.state.currentChatroom){
       this.state.hubConnection.invoke("RemoveFromChat", this.state.currentChatroom, `${this.state.user.firstName} ${this.state.user.lastName}`)
+      this.setState({currentChatroom: ""})
     }
   }
 
@@ -185,6 +196,7 @@ class MainPage extends React.Component {
         chatrooms={this.state.chatrooms}
         clearMessages={this.clearMessagesOnRoomChange}
         removeFromChatroom={this.removeFromChatroom}
+        removeAllUsersFromChat={this.removeAllUsersFromChat}
       />
     )
 
