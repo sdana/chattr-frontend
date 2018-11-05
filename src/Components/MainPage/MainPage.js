@@ -226,7 +226,11 @@ class MainPage extends React.Component {
       :
         (this.state.settingsPage)
           ?
-          <Redirect to="/userSettings" />
+          // <Redirect to="/userSettings"/>
+          <Redirect to={{
+            pathname: '/userSettings',
+            props: {getUpdatedInfo: this.getUpdatedUserInfo}
+          }} />
           
       :
       <React.Fragment>
