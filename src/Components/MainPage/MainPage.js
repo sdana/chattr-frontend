@@ -62,7 +62,6 @@ class MainPage extends React.Component {
     logout: false,
     showDrawer: false,
     settingsPage: false,
-    redirectAfterChatClosed: false,
     chatrooms: [],
     currentChatroom: "",
     messages: [],
@@ -104,8 +103,8 @@ class MainPage extends React.Component {
         })
 
         hubConnection.on("chatClosed", groupName => {
+          alert("This chat has ended.")
           this.removeFromChatroom()
-          this.setState({redirectAfterChatClosed: true})
         })
       
   }
