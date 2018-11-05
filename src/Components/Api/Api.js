@@ -1,8 +1,10 @@
+const ipAddr = "10.0.0.205"
 class Api {
+
 
     //User login method. Also receives bearer token to interact with restricted parts of API
     userLogIn = (username, password) => {
-       return fetch("http://10.0.0.205:5555/api/login",{
+       return fetch(`http://${ipAddr}:5555/api/login`,{
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -15,7 +17,7 @@ class Api {
     }
 
     userRegister = (username, password, firstName,lastName) => {
-        return fetch("http://10.0.0.205:5555/api/token",{
+        return fetch(`http://${ipAddr}:5555/api/token`,{
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -30,7 +32,7 @@ class Api {
     }
 
     userDetails = (token) => {
-        return fetch("http://10.0.0.205:5555/api/user", {
+        return fetch(`http://${ipAddr}:5555/api/user`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${sessionStorage.getItem("loginToken")}`,
@@ -40,7 +42,7 @@ class Api {
     }
 
     editUser = (token, userEdits, userId) => {
-        return fetch(`http://10.0.0.205:5555/api/user/${userId}`, {
+        return fetch(`http://${ipAddr}:5555/api/user/${userId}`, {
             method: "PUT",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -51,7 +53,7 @@ class Api {
     }
 
     getAllChatrooms = (token) => {
-        return fetch("http://10.0.0.205:5555/api/chatroom",{
+        return fetch(`http://${ipAddr}:5555/api/chatroom`,{
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -61,7 +63,7 @@ class Api {
     }
 
     getPreviousChatroomMessages = (token, chatroomName) => {
-        return fetch("http://10.0.0.205:5555/api/message", {
+        return fetch(`http://${ipAddr}:5555/api/message`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -71,7 +73,7 @@ class Api {
     }
 
     writeMessageToDb = (message, chatName, userId, token) => {
-        return fetch("http://10.0.0.205:5555/api/message", {
+        return fetch(`http://${ipAddr}:5555/api/message`, {
             method: "POST",
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -86,15 +88,16 @@ class Api {
         }).then(e => e.json()).catch(err => console.log(err))
     }
 
-    createChatRoom = (token, roomName) => {
-        return fetch("http://10.0.0.205:5555/api/chatroom", {
+    createChatRoom = (token, roomName, userId) => {
+        return fetch(`http://${ipAddr}:5555/api/chatroom`, {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                Title: roomName
+                Title: roomName,
+                userId: userId
             })
         }).then(res => res.json())
     }

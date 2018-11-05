@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import ArrowBack from "@material-ui/icons/ArrowBack"
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import Avatar from "@material-ui/core/Avatar"
@@ -21,6 +20,8 @@ import Lips from "../img/lips.png"
 
 //use new materialUI typography variants
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
+
+const ipAddr = "10.0.0.205"
 
 const styles = {
   root: {
@@ -70,10 +71,10 @@ class MainPage extends React.Component {
   componentDidMount = () => {
     const userToken = sessionStorage.getItem("loginToken")
     api.userDetails(userToken).then(res => this.setState( (prevState) => {return {user: res}}))
-    api.getAllChatrooms(userToken).then(res => this.setState({chatrooms: res, userToken: userToken}))
+    api.getAllChatrooms(userToken).then(res => this.setState({chatrooms: res, userToken: userToken})).then(console.log(this.state.chatrooms))
 
     const hubConnection = new HubConnectionBuilder()
-        .withUrl("http://10.0.0.205:5555/Hubs/ChatHub")
+        .withUrl(`http://${ipAddr}:5555/Hubs/ChatHub`)
         .configureLogging(LogLevel.Information)
         .build();
 
@@ -176,7 +177,15 @@ class MainPage extends React.Component {
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
     const sideList = (
-      <PopulateChatroomList toggleDrawer={this.toggleDrawer} user={this.state.user} setCurrentChatroom={this.setCurrentChatroom} hubConnection={this.state.hubConnection} chatrooms={this.state.chatrooms} toggleDrawer={this.toggleDrawer} clearMessages={this.clearMessagesOnRoomChange} removeFromChatroom={this.removeFromChatroom}/>
+      <PopulateChatroomList 
+        toggleDrawer={this.toggleDrawer}
+        user={this.state.user}
+        setCurrentChatroom={this.setCurrentChatroom}
+        hubConnection={this.state.hubConnection}
+        chatrooms={this.state.chatrooms}
+        clearMessages={this.clearMessagesOnRoomChange}
+        removeFromChatroom={this.removeFromChatroom}
+      />
     )
 
     return (

@@ -4,7 +4,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
 import Add from "@material-ui/icons/Add"
-import IconButton from '@material-ui/core/IconButton';
 import Button from "@material-ui/core/Button"
 import TextField from "@material-ui/core/TextField"
 import { withStyles } from '@material-ui/core/styles';
@@ -15,6 +14,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from "@material-ui/core/Divider"
+import RemoveCircle from "@material-ui/icons/RemoveCircle"
+import IconButton from "@material-ui/core/IconButton"
 import api from "../Api/Api"
 
 
@@ -51,8 +52,12 @@ class PopulateChatroomList extends Component {
         }
         else {
             let token = sessionStorage.getItem("loginToken")
-            api.createChatRoom(token, this.state.name).then(res => console.log(res))
+            api.createChatRoom(token, this.state.name, this.props.user.id).then(res => console.log(res))
         }
+    }
+
+    removeChatroom = () => {
+        
     }
 
 
@@ -71,6 +76,7 @@ class PopulateChatroomList extends Component {
                             this.props.removeFromChatroom()
                             this.props.setCurrentChatroom(e, e.currentTarget.id)
                         }} />
+                        {(this.props.user.id === room.userId) ? <IconButton><RemoveCircle color="secondary"></RemoveCircle></IconButton> : null}
                         </ListItem>
                         </div>
             ))}
