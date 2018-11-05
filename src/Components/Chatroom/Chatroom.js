@@ -61,7 +61,6 @@ export default class Chatroom extends Component {
                     style={{marginLeft:10}}
                     onInput={e => this.handleFieldChange(e)}>
                 </input>
-                <Button variant="text" color="primary" type="submit" style={{marginLeft:'3rem'}}>Send</Button>
                 </form>
       </div>
       </Paper>

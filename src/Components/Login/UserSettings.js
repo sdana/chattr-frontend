@@ -7,9 +7,11 @@ import Button from "@material-ui/core/Button"
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import Grid from "@material-ui/core/Grid"
 import 'typeface-roboto';
+import Lips from "../img/lips.png"
 
-export default class UserSettings extends Component {
+ class UserSettings extends Component {
 
     state = {
         redirect: false,
@@ -72,50 +74,73 @@ export default class UserSettings extends Component {
         if (!this.state.redirect){
             return (
                 <React.Fragment>
-                    <Typography variant="h3">Change Account Information</Typography>
+                    <Grid 
+                        containter
+                        spacing={0}
+                        direction="column"
+                        alignItems="center"
+                        justify="center"
+                        style={{ minHeight: '100vh' }}    
+                    >
+                    {/* <div classes={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}> */}
+                    <Grid item>
+                    <Typography variant="h3" style={{margin:40}} align="center">Change Account Information</Typography>
+                    </Grid>
+                    <Grid item>
+                    <Typography align="center"><img src={Lips} alt="lips" style={{height:200}}></img></Typography>
+                    </Grid>
                     <form onSubmit={(e) => {e.preventDefault(); this.submitChanges()}}>
+                    <Grid item align="center">
                         <TextField
                             id="firstName"
                             label="First Name"
                             type="text"
                             name="firstName"
-                            variant="outlined"
+                            variant="standard"
                             defaultValue={this.state.user.firstName}
-                            InputLabelProps={{ shrink: true }}
+                            // InputLabelProps={{ shrink: true }}
                             autoFocus
                             onChange={this.handleFieldChange}
+                            style={{margin:25}}
                         />
                         <TextField
                             id="lastName"
                             label="Last Name"
                             type="text"
                             name="lastName"
-                            variant="outlined"
+                            variant="standard"
                             defaultValue={this.state.user.lastName}
-                            InputLabelProps={{ shrink: true }}
+                            // InputLabelProps={{ shrink: true }}
                             onChange={this.handleFieldChange}
+                            style={{margin:25}}
                         />
                         <TextField
                             id="avatarUrl"
                             label="Avatar Url"
                             type="text"
                             name="avatarUrl"
-                            variant="outlined"
+                            variant="standard"
                             defaultValue={this.state.user.avatarUrl}
-                            InputLabelProps={{ shrink: true }}
+                            // InputLabelProps={{ shrink: true }}
                             onChange={this.handleFieldChange}
+                            style={{margin:25}}
                         />
+                        </Grid>
+                        <Grid item align="center">
                         <Button variant="contained" color="primary" id="registerButton" type="submit">
                             {(this.state.firstName !== "" || this.state.lastName !== "" || this.state.avatarUrl !== "") 
                                 ? "Submit Changes" 
                                 : "Back Home"
                             }
                         </Button>
+                    </Grid>
                     </form>
 
-                    <Button variant="text" color="secondary" onClick={() => this.setState({open: true})}>Delete Account</Button>
+                    <Grid item align="center">
+                    <Button variant="text" color="secondary" style={{marginTop:30,fontSize:'1.2rem'}}onClick={() => this.setState({open: true})}>Delete Account</Button>
+                    </Grid>
+                    </Grid>
                         
-                    
                     
                     {/* <-----------------Alert Dialog if user wants to delete account --------------------------------------------->*/}
                     <Dialog 
@@ -145,3 +170,5 @@ export default class UserSettings extends Component {
         }
     }
 }
+
+export default UserSettings;

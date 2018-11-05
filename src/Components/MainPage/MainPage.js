@@ -194,7 +194,10 @@ class MainPage extends React.Component {
     } 
     this.state.hubConnection.invoke("AddToGroup", room, joinMessage)
     this.setState(() => {
-      return {currentChatroom: room}
+      return {
+        currentChatroom: room, 
+        messages: []
+      }
     })
   }
 
@@ -244,7 +247,7 @@ class MainPage extends React.Component {
           {sideList}
         </Drawer>
             <Typography variant="h5" color="inherit" className={classes.grow}>
-              <img src={Lips} alt="lips" style={{height:40, marginRight:15}}></img> {(this.state.user) ? `${this.state.user.firstName} ${this.state.user.lastName}!` : ""}
+              {(this.state.user) ? `${this.state.user.firstName} ${this.state.user.lastName}` : ""}
             </Typography>
             <Typography variant="title" color="inherit" className={classes.grow}>
               {(this.state.currentChatroom) ? `Chatting in ${this.state.currentChatroom}` : ""}
@@ -298,6 +301,7 @@ class MainPage extends React.Component {
               previousMessages={this.state.previousMessages} /> 
           : <div style={{marginTop:50}}>
               <Typography variant="h2" color="textPrimary" align="center">Welcome to Chattr!</Typography>
+              <Typography align="center"><img src={Lips} alt="lips" style={{height:200}}></img></Typography>
               <Typography variant="h4" color="textSecondary" align="center">Please select a chat room from the left menu</Typography>
             </div>}
       </div>

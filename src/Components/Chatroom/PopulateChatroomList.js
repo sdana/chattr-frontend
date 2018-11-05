@@ -115,7 +115,7 @@ class PopulateChatroomList extends Component {
                     label="Chat Name"
                     type="text"
                     fullWidth
-                    autoComplete="no"
+                    autoComplete="off"
                     onChange={this.handleFieldChange}
                 />
                 </DialogContent>
