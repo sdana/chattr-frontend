@@ -183,7 +183,19 @@ class MainPage extends React.Component {
   }
 
   joinChatAfterCreate = (room) => {
-    this.setState({currentChatroom: room})
+    if (this.state.currentChatroom)
+    {
+      this.removeFromChatroom()
+    }
+    let joinMessage = {
+      avatar: this.state.user.avatarUrl,
+      user: `${this.state.user.firstName} ${this.state.user.lastName}`,
+      message: `Has joined ${room}`
+    } 
+    this.state.hubConnection.invoke("AddToGroup", room, joinMessage)
+    this.setState(() => {
+      return {currentChatroom: room}
+    })
   }
 
   render() {
