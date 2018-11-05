@@ -56,8 +56,10 @@ class PopulateChatroomList extends Component {
         }
     }
 
-    removeChatroom = () => {
-        
+    removeChatroom = (e) => {
+        console.log(e.currentTarget.id)
+        const token = sessionStorage.getItem("loginToken")
+        api.deleteChatRoom(token, e.currentTarget.id).then(res => console.log(res))
     }
 
 
@@ -76,7 +78,7 @@ class PopulateChatroomList extends Component {
                             this.props.removeFromChatroom()
                             this.props.setCurrentChatroom(e, e.currentTarget.id)
                         }} />
-                        {(this.props.user.id === room.userId) ? <IconButton><RemoveCircle color="secondary"></RemoveCircle></IconButton> : null}
+                        {(this.props.user.id === room.userId) ? <RemoveCircle id={room.chatroomId} onClick={this.removeChatroom} color="secondary"></RemoveCircle> : null}
                         </ListItem>
                         </div>
             ))}

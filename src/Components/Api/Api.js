@@ -102,6 +102,15 @@ class Api {
         }).then(res => res.json())
     }
 
+    deleteChatRoom = (token, chatId) => {
+        return fetch(`http://${ipAddr}:5555/api/chatroom/${chatId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        }).then(res => res.json())
+    }
+
 }
 
 const api = new Api()
