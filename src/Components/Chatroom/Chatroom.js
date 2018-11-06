@@ -57,7 +57,7 @@ export default class Chatroom extends Component {
                     type="text" 
                     placeholder="message" 
                     value={this.state.messageField} 
-                    style={{marginLeft:10}}
+                    style={{paddingLeft:10, width:'99.3%'}}
                     onInput={e => this.handleFieldChange(e)}>
                 </input>
                 </form>
