@@ -253,8 +253,8 @@ class MainPage extends React.Component {
             <Typography variant="h5" color="inherit" className={classes.grow}>
               {(this.state.user) ? `${this.state.user.firstName} ${this.state.user.lastName}` : ""}
             </Typography>
-            <Typography variant="title" color="inherit" className={classes.grow}>
-              {(this.state.currentChatroom) ? `Chatting in ${this.state.currentChatroom}` : ""}
+            <Typography variant="caption" color="inherit" className={classes.grow}>
+              {(this.state.currentChatroom) ? `Chatting in: ${this.state.currentChatroom}` : ""}
             </Typography>
             {auth && (
               <div>
