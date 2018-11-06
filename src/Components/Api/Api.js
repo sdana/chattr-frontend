@@ -1,4 +1,4 @@
-const ipAddr = "10.0.0.205"
+const ipAddr = "localhost"
 class Api {
 
 

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './Chatroom.css';
 import PreviousMessages from "./PreviousMessages"
-import Button from "@material-ui/core/Button"
 import Typography from "@material-ui/core/Typography"
 import AccountCircle from "@material-ui/icons/AccountCircle"
 import Avatar from "@material-ui/core/Avatar"
@@ -58,7 +57,7 @@ export default class Chatroom extends Component {
                     type="text" 
                     placeholder="message" 
                     value={this.state.messageField} 
-                    style={{marginLeft:10}}
+                    style={{paddingLeft:10, width:'99.3%'}}
                     onInput={e => this.handleFieldChange(e)}>
                 </input>
                 </form>
