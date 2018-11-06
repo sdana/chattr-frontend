@@ -21,7 +21,7 @@ import Lips from "../img/lips.png"
 //use new materialUI typography variants
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
-const ipAddr = "10.0.0.205"
+const ipAddr = "localhost"
 
 const styles = {
   root: {

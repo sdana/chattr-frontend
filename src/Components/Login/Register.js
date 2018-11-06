@@ -8,6 +8,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Lips from "../img/lips.png"
+import Typography from "@material-ui/core/Typography"
 import 'typeface-roboto';
 
 export default class Register extends Component {
@@ -16,6 +18,7 @@ export default class Register extends Component {
         redirect: false,
         alreadyRegistered: false,
         open: false,
+        loginPage: false,
         firstName: "",
         lastName: "",
         email: "",
@@ -54,12 +57,20 @@ export default class Register extends Component {
         })
     }
 
+    backToLogin = () => {
+        this.setState({redirect: true})
+    }
+
     render(){
         if (!this.state.redirect){
             return (
                 <React.Fragment>
+                    <div style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center', marginTop:30}}>
+                <span><Typography variant="h1">CHATTR</Typography></span>
+                <img src={Lips} alt="teeth" style={{height:300}}/>
                     <h1>Register for Chattr</h1>
                     <form onSubmit={this.registerUser}>
+                    <div style={{display:'flex',flexDirection:'row',justifyContent:"space-around"}}>
                         <TextField
                             id="firstName"
                             label="First Name"
@@ -69,6 +80,7 @@ export default class Register extends Component {
                             value={this.state.firstName}
                             autoFocus
                             required
+                            style={{margin:10}}
                             onChange={this.handleFieldChange}
                         />
                         <TextField
@@ -79,8 +91,11 @@ export default class Register extends Component {
                             variant="outlined"
                             value={this.state.lastName}
                             required
+                            style={{margin:10}}
                             onChange={this.handleFieldChange}
                         />
+                        </div>
+                        <div style={{display:'flex',flexDirection:'row',justifyContent:"space-around"}}>
                         <TextField
                             id="email"
                             label="Email"
@@ -88,7 +103,8 @@ export default class Register extends Component {
                             name="email"
                             variant="outlined"
                             value={this.state.email}
-                            required
+                            require
+                            style={{margin:10}}
                             onChange={this.handleFieldChange}
                         />
                         <TextField
@@ -99,10 +115,16 @@ export default class Register extends Component {
                             variant="outlined"
                             value={this.state.password}
                             required
+                            style={{margin:10}}
                             onChange={this.handleFieldChange}
                         />
+                        </div>
+                        <div style={{display:'flex',flexDirection:'row',justifyContent:"space-around"}}>
                         <Button variant="contained" color="primary" id="registerButton" type="submit">Create Account</Button>
+                        <Button variant="outlined" color="inherit" onClick={this.backToLogin}>Back to Login</Button>
+                        </div>
                     </form>
+                    </div>
                     
                     {/* <-----------------Alert Dialog if user is already registered --------------------------------------------->*/}
                     <Dialog 
