@@ -16,9 +16,12 @@ import Chatroom from "../Chatroom/Chatroom"
 import { HubConnectionBuilder, LogLevel } from "@aspnet/signalr"
 import PopulateChatroomList from "../Chatroom/PopulateChatroomList"
 import 'typeface-roboto';
+import Lips from "../img/lips.png"
 
 //use new materialUI typography variants
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
+
+const ipAddr = "10.0.0.205"
 
 const styles = {
   root: {
@@ -68,10 +71,10 @@ class MainPage extends React.Component {
   componentDidMount = () => {
     const userToken = sessionStorage.getItem("loginToken")
     api.userDetails(userToken).then(res => this.setState( (prevState) => {return {user: res}}))
-    api.getAllChatrooms(userToken).then(res => this.setState({chatrooms: res, userToken: userToken}))
+    api.getAllChatrooms(userToken).then(res => this.setState({chatrooms: res, userToken: userToken})).then(console.log(this.state.chatrooms))
 
     const hubConnection = new HubConnectionBuilder()
-        .withUrl("http://10.0.0.205:5555/Hubs/ChatHub")
+        .withUrl(`http://${ipAddr}:5555/Hubs/ChatHub`)
         .configureLogging(LogLevel.Information)
         .build();
 
@@ -98,25 +101,24 @@ class MainPage extends React.Component {
             const userToken = sessionStorage.getItem("loginToken")
             api.getPreviousChatroomMessages(userToken, this.state.currentChatroom).then(res => this.setState({previousMessages: res}))
         })
+
+        hubConnection.on("chatClosed", groupName => {
+          alert("This chat has ended.")
+          this.removeFromChatroom()
+        })
       
+  }
+
+  removeAllUsersFromChat = (groupName) => {
+    this.state.hubConnection.invoke("RemoveAllUsersFromChat", groupName)
   }
 
   removeFromChatroom = () => {
     if (this.state.currentChatroom){
       this.state.hubConnection.invoke("RemoveFromChat", this.state.currentChatroom, `${this.state.user.firstName} ${this.state.user.lastName}`)
+      this.setState({currentChatroom: ""})
     }
   }
-
-
-  // receiveMessage = (incomingMessage, groupName) => {
-  //   console.log(groupName)
-  //   let newMessage = this.state.messages
-  //           newMessage.push(incomingMessage)
-  //           // this.setState({messages: newMessage})
-  //           this.setState((prevState) => {
-  //             return {messages: newMessage}
-  //           })
-  // }
 
   getUpdatedUserInfo = () => {
     const userToken = sessionStorage.getItem("loginToken")
@@ -180,12 +182,41 @@ class MainPage extends React.Component {
     })
   }
 
+  joinChatAfterCreate = (room) => {
+    if (this.state.currentChatroom)
+    {
+      this.removeFromChatroom()
+    }
+    let joinMessage = {
+      avatar: this.state.user.avatarUrl,
+      user: `${this.state.user.firstName} ${this.state.user.lastName}`,
+      message: `Has joined ${room}`
+    } 
+    this.state.hubConnection.invoke("AddToGroup", room, joinMessage)
+    this.setState(() => {
+      return {
+        currentChatroom: room, 
+        messages: []
+      }
+    })
+  }
+
   render() {
     const { classes } = this.props;
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
     const sideList = (
-      <PopulateChatroomList user={this.state.user} setCurrentChatroom={this.setCurrentChatroom} hubConnection={this.state.hubConnection} chatrooms={this.state.chatrooms} toggleDrawer={this.toggleDrawer} clearMessages={this.clearMessagesOnRoomChange} removeFromChatroom={this.removeFromChatroom}/>
+      <PopulateChatroomList 
+        toggleDrawer={this.toggleDrawer}
+        user={this.state.user}
+        setCurrentChatroom={this.setCurrentChatroom}
+        hubConnection={this.state.hubConnection}
+        chatrooms={this.state.chatrooms}
+        clearMessages={this.clearMessagesOnRoomChange}
+        removeFromChatroom={this.removeFromChatroom}
+        removeAllUsersFromChat={this.removeAllUsersFromChat}
+        joinChatAfterCreate={this.joinChatAfterCreate}
+      />
     )
 
     return (
@@ -195,7 +226,11 @@ class MainPage extends React.Component {
       :
         (this.state.settingsPage)
           ?
-          <Redirect to="/userSettings" />
+          // <Redirect to="/userSettings"/>
+          <Redirect to={{
+            pathname: '/userSettings',
+            props: {getUpdatedInfo: this.getUpdatedUserInfo}
+          }} />
           
       :
       <React.Fragment>
@@ -215,10 +250,10 @@ class MainPage extends React.Component {
           </div>
           {sideList}
         </Drawer>
-            <Typography variant="h4" color="inherit" className={classes.grow}>
-              Welcome to Chattr {(this.state.user) ? `${this.state.user.firstName} ${this.state.user.lastName}!` : ""}
+            <Typography variant="h5" color="inherit" className={classes.grow}>
+              {(this.state.user) ? `${this.state.user.firstName} ${this.state.user.lastName}` : ""}
             </Typography>
-            <Typography variant="h6" color="inherit" className={classes.grow}>
+            <Typography variant="title" color="inherit" className={classes.grow}>
               {(this.state.currentChatroom) ? `Chatting in ${this.state.currentChatroom}` : ""}
             </Typography>
             {auth && (
@@ -229,7 +264,7 @@ class MainPage extends React.Component {
                   onClick={this.handleMenu}
                   color="inherit"
                 >
-                  {(this.state.user.avatarUrl) ? <Avatar src={this.state.user.avatarUrl} /> : <AccountCircle />}
+                  {(this.state.user.avatarUrl) ? <Avatar src={this.state.user.avatarUrl} /> : <AccountCircle style={{height:40,width:40}}/>}
                 </IconButton>
                 <Menu
                   id="menu-appbar"
@@ -245,12 +280,16 @@ class MainPage extends React.Component {
                   open={open}
                   onClose={this.handleClose}
                 >
-                  <MenuItem onClick={() => {this.setState({settingsPage: true}); this.handleClose()}}>Profile</MenuItem>
+                  <MenuItem onClick={() => {
+                    this.setState({settingsPage: true})
+                    this.handleClose()}}>
+                    Profile
+                  </MenuItem>
                   <MenuItem onClick={() => {
                     this.handleClose()
-                    this.logout()
-
-                  }}>Logout</MenuItem>
+                    this.logout()}}>
+                    Logout
+                  </MenuItem>
                 </Menu>
               </div>
             )}
@@ -258,7 +297,17 @@ class MainPage extends React.Component {
         </AppBar>
       </div>
       <div>
-        {(this.state.currentChatroom) ? <Chatroom currentRoom={this.state.currentChatroom} messages={this.state.messages} sendMessage={this.sendMessage} previousMessages={this.state.previousMessages} /> : <div><h1 className="headline">Welcome to Chattr!</h1><h3>Please select a chat room</h3></div>}
+        {(this.state.currentChatroom) 
+          ? <Chatroom 
+              currentRoom={this.state.currentChatroom} 
+              messages={this.state.messages} 
+              sendMessage={this.sendMessage} 
+              previousMessages={this.state.previousMessages} /> 
+          : <div style={{marginTop:50}}>
+              <Typography variant="h2" color="textPrimary" align="center">Welcome to Chattr!</Typography>
+              <Typography align="center"><img src={Lips} alt="lips" style={{height:200}}></img></Typography>
+              <Typography variant="h4" color="textSecondary" align="center">Please select a chat room from the left menu</Typography>
+            </div>}
       </div>
     </React.Fragment>
     );

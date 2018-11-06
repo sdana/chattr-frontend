@@ -1,11 +1,16 @@
+::-webkit-scrollbar {
+  width: 0px;  /* remove scrollbar space */
+  background: transparent;  /* optional: just make scrollbar invisible */
+}
+
 #message-box {
     width: inherit;
-    height: 85vh;
+    height: 80vh;
     overflow-y: scroll;
     display: flex;
     flex-direction: column-reverse;
-    border: 3px dotted crimson;
-    margin: 5;
+    border: 1px grey solid;
+    margin: 5px 0;
     padding: 1px 2px;
   }
   
@@ -16,6 +21,7 @@
   }
   
   input {
+    border: none;
     width: 91%;
     height: 30px;
     display: inline-block;

@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button"
 import Typography from "@material-ui/core/Typography"
 import AccountCircle from "@material-ui/icons/AccountCircle"
 import Avatar from "@material-ui/core/Avatar"
+import Paper from "@material-ui/core/Paper"
 import 'typeface-roboto';
 
 export default class Chatroom extends Component {
@@ -23,16 +24,18 @@ export default class Chatroom extends Component {
     render(){
 
         return(
+            <Paper elevation="2" square="true">
             <div id="main">
                 <div id="message-box">
                 <ul>
                 <PreviousMessages messages={this.props.previousMessages} />
                     {this.props.messages.map((message,index) => {
-                        return <li key={index}>
+                        return <li key={index}><div style={{display:'inline-flex',justifyContent:'flex-start'}}>
                             {(message.avatar !== "null" || message.avatar === "") 
                             ? <Avatar src={message.avatar} /> 
-                            : <AccountCircle />}
+                            : <AccountCircle style={{height:40,width:40}}/>}
                             <Typography variant="h6" color="inherit">{message.user}: {message.message}</Typography>
+                            </div>
                         </li>}
                     )}
                 </ul>
@@ -48,10 +51,19 @@ export default class Chatroom extends Component {
             this.setState({messageField: ""})
             }
                 }}>
-                <input id="messageField" autoFocus autoComplete="off" type="text" placeholder="message" value={this.state.messageField} onInput={e => this.handleFieldChange(e)}></input>
-                <Button variant="text" color="primary" type="submit">Send</Button></form>
+                <input 
+                    id="messageField" 
+                    autoFocus 
+                    autoComplete="off" 
+                    type="text" 
+                    placeholder="message" 
+                    value={this.state.messageField} 
+                    style={{marginLeft:10}}
+                    onInput={e => this.handleFieldChange(e)}>
+                </input>
+                </form>
       </div>
-
+      </Paper>
         )
     }
 }
