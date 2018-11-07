@@ -68,7 +68,7 @@ export default class Register extends Component {
                     <div style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center', marginTop:30}}>
                 <span><Typography variant="h1">CHATTR</Typography></span>
                 <img src={Lips} alt="teeth" style={{height:300}}/>
-                    <h1>Register for Chattr</h1>
+                    <Typography variant="h5">Register for Chattr</Typography>
                     <form onSubmit={this.registerUser}>
                     <div style={{display:'flex',flexDirection:'row',justifyContent:"space-around"}}>
                         <TextField

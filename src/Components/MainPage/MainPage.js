@@ -21,7 +21,7 @@ import Lips from "../img/lips.png"
 //use new materialUI typography variants
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
-const ipAddr = "localhost"
+const ipAddr = "https://chattrapi.azurewebsites.net"
 
 const styles = {
   root: {
@@ -74,7 +74,7 @@ class MainPage extends React.Component {
     api.getAllChatrooms(userToken).then(res => this.setState({chatrooms: res, userToken: userToken})).then(console.log(this.state.chatrooms))
 
     const hubConnection = new HubConnectionBuilder()
-        .withUrl(`http://${ipAddr}:5555/Hubs/ChatHub`)
+        .withUrl(`${ipAddr}/Hubs/ChatHub`)
         .configureLogging(LogLevel.Information)
         .build();
 
